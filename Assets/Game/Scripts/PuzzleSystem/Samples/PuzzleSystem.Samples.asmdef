@@ -1,0 +1,16 @@
+{
+    "name": "PuzzleSystem.Samples",
+    "rootNamespace": "PuzzleSystem.Samples",
+    "references": [
+        "GUID:9a64723d58951504984adfb7365cb01b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
