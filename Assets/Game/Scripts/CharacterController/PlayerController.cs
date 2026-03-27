@@ -1,5 +1,6 @@
 using UnityEngine;
 using PinePie.SimpleJoystick;
+using EnemyAttachmentSystem.Runtime;
 
 namespace Character.Runtime
 {
@@ -8,10 +9,11 @@ namespace Character.Runtime
     {
         [Header("Components")]
         [SerializeField] private JoystickController joystick;
+        private PlayerAttachmentManager attachmentManager;
 
         [Header("2.5D Metrics")]
-        public float lateralSpeed = 2.2f; 
-        public float depthSpeed = 1.5f;   
+        public float lateralSpeed = 5f; 
+        public float depthSpeed = 3f;   
         public float runMultiplier = 2.18f; 
         public float acceleration = 12f;
         public float rotationSpeed = 15f; 
@@ -32,6 +34,8 @@ namespace Character.Runtime
         {
             charController = GetComponent<CharacterController>();
             camTransform = Camera.main.transform;
+            
+            attachmentManager = GetComponent<PlayerAttachmentManager>();
         }
 
         void Update()
@@ -48,7 +52,10 @@ namespace Character.Runtime
         
         public void Jump()
         {
-            if (charController.isGrounded)
+            bool canJump = true;
+            if(attachmentManager != null && attachmentManager.currentAttachedCount > 3) canJump = false;
+
+            if (charController.isGrounded && canJump)
             {
                 verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             }
@@ -58,9 +65,17 @@ namespace Character.Runtime
         {
             Vector3 camForward = Vector3.ProjectOnPlane(camTransform.forward, Vector3.up).normalized;
             Vector3 camRight = Vector3.ProjectOnPlane(camTransform.right, Vector3.up).normalized;
+            
+            float weightMultiplier = 1f;
+            if (attachmentManager != null)
+            {
+                weightMultiplier = attachmentManager.currentSpeed / attachmentManager.baseSpeed;
+            }
 
             float mult = isHunted ? runMultiplier : 1f;
-            Vector3 targetVelocity = (camRight * input.x * lateralSpeed * mult) + (camForward * input.y * depthSpeed * mult);
+            
+            Vector3 targetVelocity = ((camRight * input.x * lateralSpeed * mult) + 
+                                     (camForward * input.y * depthSpeed * mult)) * weightMultiplier;
             
             currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, acceleration * Time.deltaTime);
             charController.Move(currentVelocity * Time.deltaTime);

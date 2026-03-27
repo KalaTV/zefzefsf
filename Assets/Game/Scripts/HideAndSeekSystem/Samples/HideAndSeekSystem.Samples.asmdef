@@ -1,0 +1,16 @@
+{
+    "name": "HideAndSeekSystem.Samples",
+    "rootNamespace": "HideAndSeekSystem.Samples",
+    "references": [
+        "GUID:d79aac487b85d6948ae87bfb5f27f824"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

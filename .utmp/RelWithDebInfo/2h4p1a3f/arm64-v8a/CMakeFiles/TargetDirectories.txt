@@ -1,0 +1,5 @@
+C:/Users/Kalav/Desktop/bubblesproject/zefzefsf/.utmp/RelWithDebInfo/2h4p1a3f/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/Kalav/Desktop/bubblesproject/zefzefsf/.utmp/RelWithDebInfo/2h4p1a3f/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/Users/Kalav/Desktop/bubblesproject/zefzefsf/.utmp/RelWithDebInfo/2h4p1a3f/arm64-v8a/GameActivity/CMakeFiles/game.dir
+C:/Users/Kalav/Desktop/bubblesproject/zefzefsf/.utmp/RelWithDebInfo/2h4p1a3f/arm64-v8a/GameActivity/CMakeFiles/edit_cache.dir
+C:/Users/Kalav/Desktop/bubblesproject/zefzefsf/.utmp/RelWithDebInfo/2h4p1a3f/arm64-v8a/GameActivity/CMakeFiles/rebuild_cache.dir
