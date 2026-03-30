@@ -11,9 +11,8 @@ namespace Character.Runtime
         [SerializeField] private JoystickController joystick;
         private PlayerAttachmentManager attachmentManager;
 
-        [Header("2.5D Metrics")]
+        [Header("2D Metrics")]
         public float lateralSpeed = 5f; 
-        public float depthSpeed = 3f;   
         public float runMultiplier = 2.18f; 
         public float acceleration = 12f;
         public float rotationSpeed = 15f; 
@@ -26,27 +25,28 @@ namespace Character.Runtime
         public bool isHunted = false; 
 
         private CharacterController charController;
-        private Transform camTransform;
         private Vector3 currentVelocity;
         private Vector3 verticalVelocity;
-
+        
+        public bool isMovementLocked = false;
+        
         void Awake()
         {
             charController = GetComponent<CharacterController>();
-            camTransform = Camera.main.transform;
-            
             attachmentManager = GetComponent<PlayerAttachmentManager>();
         }
 
         void Update()
         {
+            if (isMovementLocked) return;
+
             Vector2 input = Vector2.zero;
             if (joystick != null)
             {
                 input = joystick.InputDirection;
             }
 
-            ApplyMovement25D(input);
+            ApplyMovement2D(input);
             ApplyGravity();
         }
         
@@ -61,11 +61,8 @@ namespace Character.Runtime
             }
         }
 
-        private void ApplyMovement25D(Vector2 input)
+        private void ApplyMovement2D(Vector2 input)
         {
-            Vector3 camForward = Vector3.ProjectOnPlane(camTransform.forward, Vector3.up).normalized;
-            Vector3 camRight = Vector3.ProjectOnPlane(camTransform.right, Vector3.up).normalized;
-            
             float weightMultiplier = 1f;
             if (attachmentManager != null)
             {
@@ -74,15 +71,16 @@ namespace Character.Runtime
 
             float mult = isHunted ? runMultiplier : 1f;
             
-            Vector3 targetVelocity = ((camRight * input.x * lateralSpeed * mult) + 
-                                     (camForward * input.y * depthSpeed * mult)) * weightMultiplier;
+            Vector3 targetVelocity = new Vector3(input.x * lateralSpeed * mult * weightMultiplier, 0, 0);
             
             currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, acceleration * Time.deltaTime);
             charController.Move(currentVelocity * Time.deltaTime);
             
-            if (currentVelocity.sqrMagnitude > 0.01f)
+            if (Mathf.Abs(currentVelocity.x) > 0.01f)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(currentVelocity.normalized);
+                float directionX = currentVelocity.x > 0 ? 1f : -1f;
+                Quaternion targetRotation = Quaternion.LookRotation(new Vector3(directionX, 0, 0));
+                
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
         }

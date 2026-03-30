@@ -56,5 +56,26 @@ namespace EnemyAttachmentSystem.Runtime
             currentSpeed = 0f;
             Debug.Log("GAME OVER : Trop d'ennemis accrochés !");
         }
+        
+        public void DestroyAllAttachedEnemies()
+        {
+            if (currentAttachedCount == 0) return;
+            
+            foreach (Transform point in attachmentPoints)
+            {
+                if (point.childCount > 0)
+                {
+                    Destroy(point.GetChild(0).gameObject);
+                }
+            }
+            
+            availablePoints = new List<Transform>(attachmentPoints);
+            
+            currentAttachedCount = 0;
+            isDead = false;
+            UpdateSpeed();
+            
+            Debug.Log("Tous les ennemis ont été détruits !");
+        }
     }
 }
