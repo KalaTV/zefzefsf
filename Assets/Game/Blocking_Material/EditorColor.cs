@@ -1,43 +1,45 @@
 using UnityEditor;
 using UnityEngine;
 
-
 [CustomEditor(typeof(BlockingColorModular))]
+[CanEditMultipleObjects] 
 public class ProBuilderColorEditorInspector : Editor
 {
     private readonly Color[] presets = new Color[]
     {
-        Color.white,
-        Color.black,
-        Color.red,
-        Color.green,
-        Color.blue,
-        Color.yellow,
-        Color.cyan,
-        Color.magenta,
+        Color.white, Color.black, Color.red, Color.green, Color.blue,
+        Color.yellow, Color.cyan, Color.magenta,
         new Color(1f, 0.5f, 0f), // orange
         new Color(0.5f, 0f, 1f)  // violet
     };
 
     public override void OnInspectorGUI()
     {
-        BlockingColorModular script = (BlockingColorModular)target;
+        serializedObject.Update();
 
         EditorGUILayout.LabelField("Color Settings", EditorStyles.boldLabel);
-        
-        Color newColor = EditorGUILayout.ColorField("Color", script.GetColor());
 
-        if (newColor != script.GetColor())
+        // Gestion multi-objets
+        Color currentColor = ((BlockingColorModular)target).GetColor();
+        Color newColor = EditorGUILayout.ColorField("Color", currentColor);
+
+        if (newColor != currentColor)
         {
-            Undo.RecordObject(script, "Change Color");
-            script.SetColor(newColor);
-            EditorUtility.SetDirty(script);
+            foreach (var obj in targets)
+            {
+                BlockingColorModular script = (BlockingColorModular)obj;
+
+                Undo.RecordObject(script, "Change Color");
+                script.SetColor(newColor);
+                EditorUtility.SetDirty(script);
+            }
         }
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Presets", EditorStyles.boldLabel);
-        
+
         int columns = 5;
+
         for (int i = 0; i < presets.Length; i += columns)
         {
             EditorGUILayout.BeginHorizontal();
@@ -47,11 +49,17 @@ public class ProBuilderColorEditorInspector : Editor
                 Color preset = presets[i + j];
 
                 GUI.backgroundColor = preset;
+
                 if (GUILayout.Button("", GUILayout.Width(40), GUILayout.Height(40)))
                 {
-                    Undo.RecordObject(script, "Preset Color");
-                    script.SetColor(preset);
-                    EditorUtility.SetDirty(script);
+                    foreach (var obj in targets)
+                    {
+                        BlockingColorModular script = (BlockingColorModular)obj;
+
+                        Undo.RecordObject(script, "Preset Color");
+                        script.SetColor(preset);
+                        EditorUtility.SetDirty(script);
+                    }
                 }
             }
 
@@ -59,5 +67,7 @@ public class ProBuilderColorEditorInspector : Editor
         }
 
         GUI.backgroundColor = Color.white;
+
+        serializedObject.ApplyModifiedProperties();
     }
 }
