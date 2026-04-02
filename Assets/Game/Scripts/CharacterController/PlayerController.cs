@@ -11,6 +11,7 @@ namespace Character.Runtime
         [SerializeField] private JoystickController joystick;
         private PlayerAttachmentManager attachmentManager;
 
+        private SpriteRenderer _spriteRenderer;
         [Header("2D Metrics")]
         public float lateralSpeed = 5f; 
         public float runMultiplier = 2.18f; 
@@ -34,6 +35,7 @@ namespace Character.Runtime
         {
             charController = GetComponent<CharacterController>();
             attachmentManager = GetComponent<PlayerAttachmentManager>();
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
 
         void Update()
@@ -81,7 +83,10 @@ namespace Character.Runtime
                 float directionX = currentVelocity.x > 0 ? 1f : -1f;
                 Quaternion targetRotation = Quaternion.LookRotation(new Vector3(directionX, 0, 0));
                 
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                if (Mathf.Abs(input.x) > 0.1f)
+                {
+                    _spriteRenderer.flipX = (input.x < 0);
+                }
             }
         }
 

@@ -12,12 +12,14 @@ namespace ColorSystem.Runtime
         
         [Header("Saturation Settings")]
         [SerializeField] private float decaySpeed = 0.1f;
-        [SerializeField] private float maxSaturation = 0f;
+
+        public float maxSaturation { get; private set; }
         [SerializeField] private float minSaturation = -100f;
         
-        private float currentSaturation = 0f;
+        public float currentSaturation = 0f;
         void Start()
         {
+            maxSaturation = 0f;
             if (globalVolume.profile.TryGet(out colorAdjustments))
             {
                 currentSaturation = maxSaturation;
@@ -35,6 +37,7 @@ namespace ColorSystem.Runtime
             
                 colorAdjustments.saturation.value = currentSaturation;
             }
+            
         }
 
         
