@@ -23,5 +23,11 @@ namespace PuzzleSystem.samples
             OnActivated?.Invoke();
             Debug.Log($"{gameObject.name} activé !");
         }
+        
+        private void OnMouseDown() 
+        {
+            
+            ToggleLever();
+        }
     }
 }

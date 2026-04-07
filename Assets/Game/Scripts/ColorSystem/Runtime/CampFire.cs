@@ -1,5 +1,4 @@
 using UnityEngine;
-using FeatherSystem.Runtime;
 
 namespace ColorSystem.Runtime
 {
@@ -9,19 +8,13 @@ namespace ColorSystem.Runtime
         private bool isPlayerInside = false;
         private bool isCampFire = false;
         [SerializeField] GameColorManager gameColorManager;
-        private PlayerPowers playerPowers;
-        
-        
+
         public void OnInteract()
         {
-            if (isPlayerInside && playerPowers.hasFireFeather)
+            if (isPlayerInside)
             {
                 Debug.Log("Allumé le feu");
                 isCampFire = true;
-            }
-            else if (isPlayerInside && !playerPowers.hasFireFeather)
-            {
-                Debug.Log("Tu na pas la plume de feu");
             }
         }
 
@@ -37,7 +30,6 @@ namespace ColorSystem.Runtime
             {
                 player = other.gameObject;
                 isPlayerInside = true;
-                playerPowers = other.GetComponent<PlayerPowers>();
             }
         }
         
