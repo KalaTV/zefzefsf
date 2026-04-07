@@ -1,4 +1,5 @@
 using UnityEngine;
+using FeatherSystem.Runtime;
 
 namespace FeatherSystem.Runtime.Interactables
 {
@@ -12,7 +13,9 @@ namespace FeatherSystem.Runtime.Interactables
         private MeshRenderer meshRenderer;
         private Color originalColor;
         private float burnProgress = 0f;
-
+        private PlayerPowers playerPowers;
+        
+        
         private void Awake()
         {
             meshRenderer = GetComponent<MeshRenderer>();
@@ -24,10 +27,14 @@ namespace FeatherSystem.Runtime.Interactables
 
         public void OnInteract()
         {
-            if (isPlayerInside && !isBurning)
+            if (isPlayerInside && !isBurning && playerPowers.hasFireFeather)
             {
                 Debug.Log("Ignited the 3D item");
                 isBurning = true;
+            }
+            else if (playerPowers == null || !playerPowers.hasFireFeather)
+            {
+                Debug.Log("Il me faut la plume pour brûler ça.");
             }
         }
 
@@ -56,6 +63,7 @@ namespace FeatherSystem.Runtime.Interactables
             {
                 player = other.gameObject;
                 isPlayerInside = true;
+                playerPowers = other.GetComponent<PlayerPowers>();
             }
             else if (other.CompareTag("Fire"))
             {
