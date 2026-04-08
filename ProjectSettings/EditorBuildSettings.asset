@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Game/Scenes/SandBox/LD_Blocking_Test.unity
+    guid: 1249b3f5361ddff41bdedbec5dcad9d8
+  - enabled: 1
     path: Assets/Game/Scenes/SandBox/TestCharacterController.unity
     guid: 603f0b5cb9c3c9143abc41777710cfb2
   m_configObjects:
