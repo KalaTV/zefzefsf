@@ -1,26 +1,37 @@
 using UnityEngine;
 using Character.Runtime;
+using UnityEngine.Splines;
 
 namespace Gameplay.Environment
 {
     public class SplineJunction : MonoBehaviour
     {
-        public UnityEngine.Splines.SplineContainer nextSpline;
-        [Tooltip("Distance en mètres sur la nouvelle spline où le joueur va arriver")]
-        public float entryDistance = 0f; 
-        [Range(-1f, 1f)] public float threshold = 0.5f;
+        [Header("Route")]
+        public SplineContainer nextSpline;
+
+        [Header("Sensibilité du Joystick")]
+        [Range(-1f, 1f)] 
+        [Tooltip("0.5 = Pousser vers le HAUT | -0.5 = Pousser vers le BAS")]
+        public float threshold = 0.5f;
 
         private void OnTriggerStay(Collider other)
         {
             if (other.CompareTag("Player"))
             {
-                var _player = other.GetComponent<PlayerController>();
-            
-                if ((threshold > 0 && _player.VerticalInput > threshold) ||
-                    (threshold < 0 && _player.VerticalInput < threshold))
+                var player = other.GetComponent<PlayerController>();
+                
+                if (player == null) return;
+                
+                bool inputMatch = false;
+                
+                if (threshold > 0 && player.VerticalInput > threshold) inputMatch = true;
+                else if (threshold < 0 && player.VerticalInput < threshold) inputMatch = true;
+
+                if (inputMatch)
                 {
-                    _player.SwitchSpline(nextSpline, entryDistance); 
-                    Debug.Log("Changement vers " + nextSpline.name + " à la distance " + entryDistance);
+                    player.SwitchSpline(nextSpline); 
+                   
+                    Debug.Log($"Passage sur : {nextSpline.name}");
                 }
             }
         }

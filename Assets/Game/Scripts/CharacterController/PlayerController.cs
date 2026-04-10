@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Mathematics;
 using UnityEngine.Splines;
 using PinePie.SimpleJoystick;
 using EnemyAttachmentSystem.Runtime;
@@ -8,9 +9,11 @@ namespace Character.Runtime
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
+        
+        
         [Header("Components")]
         [SerializeField] private JoystickController joystick;
-        [SerializeField] private SplineContainer activeSpline;
+        [SerializeField] public SplineContainer activeSpline;
         private PlayerAttachmentManager attachmentManager;
         private SpriteRenderer _spriteRenderer;
         private CharacterController charController;
@@ -28,7 +31,12 @@ namespace Character.Runtime
         public bool isMovementLocked = false;
         public bool isHunted = false;
 
-        private float _currentDistance = 0f;
+        [Header("Respawn System")]
+        private Vector3 _lastCheckpointPos;
+        private SplineContainer _lastCheckpointSpline;
+        private float _lastCheckpointDistance;
+
+        public float _currentDistance = 0f;
         private float _splineLength;
         private float _currentSpeedValue;
         private Vector3 _verticalVelocity;
@@ -57,7 +65,6 @@ namespace Character.Runtime
 
         private void ApplyMovementOnSpline(float inputX)
         {
-            // 1. Calcul de la vitesse au sol
             float weightMultiplier = (attachmentManager != null) ? attachmentManager.currentSpeed / attachmentManager.baseSpeed : 1f;
             float mult = isHunted ? runMultiplier : 1f;
             float targetSpeed = inputX * speed * mult * weightMultiplier;
@@ -65,22 +72,16 @@ namespace Character.Runtime
             _currentSpeedValue = Mathf.Lerp(_currentSpeedValue, targetSpeed, acceleration * Time.deltaTime);
             _currentDistance += _currentSpeedValue * Time.deltaTime;
             _currentDistance = Mathf.Clamp(_currentDistance, 0f, _splineLength);
-
-            // 2. Calculer le mouvement HORIZONTAL (Spline)
+            
             float t = _currentDistance / _splineLength;
             Vector3 targetSplinePos = activeSpline.EvaluatePosition(t);
-            // On ignore la hauteur (Y) de la spline pour laisser le saut gérer le Y
             Vector3 horizontalMove = targetSplinePos - transform.position;
             horizontalMove.y = 0; 
-
-            // 3. Calculer le mouvement VERTICAL (Saut/Gravité)
+            
             ApplyGravity();
-
-            // 4. COMBINER ET APPLIQUER
-            // On combine le vecteur de la spline et le vecteur vertical
+            
             charController.Move(horizontalMove + (_verticalVelocity * Time.deltaTime));
-
-            // 5. Visuels
+            
             if (Mathf.Abs(inputX) > 0.1f)
             {
                 _spriteRenderer.flipX = (inputX < 0);
@@ -115,11 +116,53 @@ namespace Character.Runtime
             _verticalVelocity.y += gravity * Time.deltaTime;
         }
 
-        public void SwitchSpline(SplineContainer newSpline, float startDistance = 0f)
+        public void SwitchSpline(SplineContainer newSpline)
         {
+            if (newSpline == null) return;
+
             activeSpline = newSpline;
             _splineLength = activeSpline.CalculateLength();
-            _currentDistance = startDistance;
+            var splineData = activeSpline.Spline;
+
+            // 1. TRADUCTION : On donne notre position "Monde" et on la convertit en position "Locale" pour la spline
+            float3 localPlayerPos = activeSpline.transform.InverseTransformPoint(transform.position);
+    
+            // 2. CALCUL : La spline cherche le point le plus proche dans son espace à elle
+            SplineUtility.GetNearestPoint(splineData, localPlayerPos, out float3 nearestLocalPos, out float nearestT);
+    
+            // 3. RETRADUCTION : On reconvertit ce point local en vraies coordonnées 3D du jeu
+            Vector3 nearestWorldPos = activeSpline.transform.TransformPoint(nearestLocalPos);
+
+            // 4. On met à jour la distance
+            _currentDistance = nearestT * _splineLength;
+
+            // 5. On déplace le perso à la bonne place (en gardant son Y pour la gravité)
+            transform.position = new Vector3(nearestWorldPos.x, transform.position.y, nearestWorldPos.z);
+    
+            Debug.Log($"Switch validé sur {newSpline.name} à {_currentDistance:F1}m");
+        }
+        public void SetCheckpoint(Vector3 pos, SplineContainer spline, float distance)
+        {
+            _lastCheckpointPos = pos;
+            _lastCheckpointSpline = spline;
+            _lastCheckpointDistance = distance;
+            Debug.Log("Checkpoint sauvegardé !");
+        }
+
+        public void Respawn()
+        {
+            _currentSpeedValue = 0;
+            _verticalVelocity = Vector3.zero;
+            
+            activeSpline = _lastCheckpointSpline;
+            _currentDistance = _lastCheckpointDistance;
+            _splineLength = activeSpline.CalculateLength();
+            
+            charController.enabled = false; 
+            transform.position = _lastCheckpointPos;
+            charController.enabled = true;
+    
+            Debug.Log("Respawn au dernier checkpoint !");
         }
     }
 }
