@@ -1343,9 +1343,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 112.193695, y: -0.20376647, z: -47.369034}
+    m_Target: {x: 145.97041, y: -4.0802593, z: -47.405216}
     speed: 2
-    m_Value: {x: 112.193695, y: -0.20376647, z: -47.369034}
+    m_Value: {x: 145.97041, y: -4.0802593, z: -47.405216}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1391,13 +1391,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.0075069913, y: -0.7892676, z: 0.008622261, w: 0.61444014}
+    m_Target: {x: 0.14430757, y: 0.41903836, z: -0.068126574, w: 0.8942024}
     speed: 2
-    m_Value: {x: -0.0075069913, y: 0.7892676, z: -0.008622261, w: -0.61444014}
+    m_Value: {x: 0.1443418, y: 0.41782773, z: -0.06793103, w: 0.8944108}
   m_Size:
-    m_Target: 19.729147
+    m_Target: 56.59381
     speed: 2
-    m_Value: 19.729147
+    m_Value: 54.156757
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1472,11 +1472,13 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: []
+      m_SelectedIDs:
+      - m_Data: -1358
       m_LastClickedID:
-        m_Data: 0
+        m_Data: -1358
       m_ExpandedIDs:
       - m_Data: -1318
+      - m_Data: 49106
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1551,7 +1553,7 @@ MonoBehaviour:
     m_SkipHidden: 1
     m_SearchArea: 1
     m_Folders:
-    - Assets/Game
+    - Assets/Game/Grafics
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1561,7 +1563,7 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 39
   m_LastFolders:
-  - Assets/Game
+  - Assets/Game/Grafics
   m_LastFoldersGridSize: 39
   m_LastProjectPath: "D:\\E-art sup \xE9cole\\Github\\zefzefsf"
   m_LockTracker:
@@ -1570,9 +1572,9 @@ MonoBehaviour:
   m_FolderTreeState:
     scrollPos: {x: 0, y: 79}
     m_SelectedIDs:
-    - m_Data: 51718
+    - m_Data: 51842
     m_LastClickedID:
-      m_Data: 51718
+      m_Data: 51842
     m_ExpandedIDs:
     - m_Data: 0
     - m_Data: 51716
@@ -1641,8 +1643,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: []
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs:
+    - m_Data: -1358
+    m_LastClickedInstanceID: -1358
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: []
     m_RenameOverlay:
