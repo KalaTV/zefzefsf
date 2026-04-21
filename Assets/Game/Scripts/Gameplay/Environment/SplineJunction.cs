@@ -2,37 +2,27 @@ using UnityEngine;
 using Character.Runtime;
 using UnityEngine.Splines;
 
-namespace Gameplay.Environment
+public class SplineJunction : MonoBehaviour
 {
-    public class SplineJunction : MonoBehaviour
+    public SplineContainer targetSpline;
+    
+    [Tooltip("Pousser le stick vers : 0.5 = Haut/Droite, -0.5 = Bas/Gauche")]
+    [Range(-1f, 1f)] public float directionTrigger = 0.5f;
+
+    private void OnTriggerStay(Collider other)
     {
-        [Header("Route")]
-        public SplineContainer nextSpline;
-
-        [Header("Sensibilité du Joystick")]
-        [Range(-1f, 1f)] 
-        [Tooltip("0.5 = Pousser vers le HAUT | -0.5 = Pousser vers le BAS")]
-        public float threshold = 0.5f;
-
-        private void OnTriggerStay(Collider other)
+        if (other.CompareTag("Player"))
         {
-            if (other.CompareTag("Player"))
+            var p = other.GetComponent<PlayerController>();
+            
+            // SÉCURITÉ ANTI-BOUCLE : Si on est déjà sur le nouveau rail, on bloque !
+            if (p.activeSpline == targetSpline) return;
+            
+            // On vérifie si tu pousses le stick du bon côté
+            if ((directionTrigger > 0 && p.SideInput > 0.5f) || 
+                (directionTrigger < 0 && p.SideInput < -0.5f))
             {
-                var player = other.GetComponent<PlayerController>();
-                
-                if (player == null) return;
-                
-                bool inputMatch = false;
-                
-                if (threshold > 0 && player.VerticalInput > threshold) inputMatch = true;
-                else if (threshold < 0 && player.VerticalInput < threshold) inputMatch = true;
-
-                if (inputMatch)
-                {
-                    player.SwitchSpline(nextSpline); 
-                   
-                    Debug.Log($"Passage sur : {nextSpline.name}");
-                }
+                p.SwitchSpline(targetSpline);
             }
         }
     }
