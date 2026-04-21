@@ -1,19 +1,18 @@
 using UnityEngine;
-using Unity.Mathematics;
 using UnityEngine.Splines;
-using PinePie.SimpleJoystick;
+using Unity.Mathematics; // Indispensable pour les calculs de Spline
+using PinePie.SimpleJoystick; // Ton joystick
 using EnemyAttachmentSystem.Runtime;
+using FeatherSystem.Runtime;
 
 namespace Character.Runtime
 {
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
-        
-        
         [Header("Components")]
         [SerializeField] private JoystickController joystick;
-        [SerializeField] public SplineContainer activeSpline;
+        public SplineContainer activeSpline;
         private PlayerAttachmentManager attachmentManager;
         private SpriteRenderer _spriteRenderer;
         private CharacterController charController;
@@ -26,22 +25,28 @@ namespace Character.Runtime
         [Header("Jump Settings")]
         public float jumpHeight = 1.2f;
         public float gravity = -15f;
+        
+        [Header("Gliding Settings")]
+        [SerializeField] private float glideGravity = -2f; 
+        private bool isGliding = false;
 
         [Header("State")]
         public bool isMovementLocked = false;
         public bool isHunted = false;
-
-        [Header("Respawn System")]
-        private Vector3 _lastCheckpointPos;
-        private SplineContainer _lastCheckpointSpline;
-        private float _lastCheckpointDistance;
 
         public float _currentDistance = 0f;
         private float _splineLength;
         private float _currentSpeedValue;
         private Vector3 _verticalVelocity;
         
-        public float VerticalInput { get; private set; }
+        public float VerticalInput { get; private set; } 
+        public float SideInput { get; private set; }    
+        public float CurrentDistance => _currentDistance;
+
+        [Header("Respawn System")]
+        private Vector3 _lastCheckpointPos;
+        private SplineContainer _lastCheckpointSpline;
+        private float _lastCheckpointDistance;
 
         void Awake()
         {
@@ -50,43 +55,58 @@ namespace Character.Runtime
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             
             if (activeSpline != null)
+            {
                 _splineLength = activeSpline.CalculateLength();
+                SetCheckpoint(transform.position, activeSpline, 0f);
+            }
         }
 
         void Update()
         {
             if (isMovementLocked || activeSpline == null) return;
-
+            
+            if (charController.isGrounded && isGliding)
+            {
+                isGliding = false;
+            }
+            
             Vector2 input = (joystick != null) ? joystick.InputDirection : Vector2.zero;
             VerticalInput = input.y;
 
-            ApplyMovementOnSpline(input.x);
+            ApplyMovementOnSpline(input);
         }
 
-        private void ApplyMovementOnSpline(float inputX)
+        private void ApplyMovementOnSpline(Vector2 input)
         {
+            float t = _currentDistance / _splineLength;
+            Vector3 tangent = activeSpline.EvaluateTangent(t);
+            Vector2 splineDir = new Vector2(tangent.x, tangent.z).normalized;
+            
+            float combinedInput = Vector2.Dot(input, splineDir);
+            
+            Vector2 perpendicularDir = new Vector2(-splineDir.y, splineDir.x);
+            SideInput = Vector2.Dot(input, perpendicularDir);
+            
             float weightMultiplier = (attachmentManager != null) ? attachmentManager.currentSpeed / attachmentManager.baseSpeed : 1f;
             float mult = isHunted ? runMultiplier : 1f;
-            float targetSpeed = inputX * speed * mult * weightMultiplier;
+            float targetSpeed = combinedInput * speed * mult * weightMultiplier;
 
             _currentSpeedValue = Mathf.Lerp(_currentSpeedValue, targetSpeed, acceleration * Time.deltaTime);
             _currentDistance += _currentSpeedValue * Time.deltaTime;
             _currentDistance = Mathf.Clamp(_currentDistance, 0f, _splineLength);
             
-            float t = _currentDistance / _splineLength;
             Vector3 targetSplinePos = activeSpline.EvaluatePosition(t);
             Vector3 horizontalMove = targetSplinePos - transform.position;
-            horizontalMove.y = 0; 
+            horizontalMove.y = 0;
             
             ApplyGravity();
             
             charController.Move(horizontalMove + (_verticalVelocity * Time.deltaTime));
             
-            if (Mathf.Abs(inputX) > 0.1f)
+            if (Mathf.Abs(combinedInput) > 0.1f)
             {
-                _spriteRenderer.flipX = (inputX < 0);
+                _spriteRenderer.flipX = (combinedInput < 0);
                 
-                Vector3 tangent = activeSpline.EvaluateTangent(t);
                 if (tangent != Vector3.zero)
                 {
                     Quaternion targetRot = Quaternion.LookRotation(tangent);
@@ -97,12 +117,21 @@ namespace Character.Runtime
 
         public void Jump()
         {
-            bool canJump = true;
-            if (attachmentManager != null && attachmentManager.currentAttachedCount > 3) canJump = false;
-
-            if (charController.isGrounded && canJump)
+            PlayerPowers powers = Object.FindFirstObjectByType<PlayerPowers>();
+            
+            if (charController.isGrounded)
             {
                 _verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                isGliding = false;
+            }
+            else if (powers.hasGlideFeather)
+            {
+                isGliding = !isGliding;
+                
+                if(isGliding && _verticalVelocity.y < 0) 
+                {
+                    _verticalVelocity.y = -1f; 
+                }
             }
         }
 
@@ -110,43 +139,53 @@ namespace Character.Runtime
         {
             if (charController.isGrounded && _verticalVelocity.y < 0)
             {
-                _verticalVelocity.y = -2f; 
+                _verticalVelocity.y = -2f;
+                isGliding = false;
+                return;
             }
-
-            _verticalVelocity.y += gravity * Time.deltaTime;
+            
+            float currentGravity = isGliding ? glideGravity : gravity;
+    
+            _verticalVelocity.y += currentGravity * Time.deltaTime;
+            
+            if (isGliding && _verticalVelocity.y < glideGravity)
+            {
+                _verticalVelocity.y = glideGravity;
+            }
         }
 
         public void SwitchSpline(SplineContainer newSpline)
         {
-            if (newSpline == null) return;
-
+            if (newSpline == null || activeSpline == newSpline) return;
+            
+            charController.enabled = false;
+            
+            _verticalVelocity = Vector3.zero;
+            _currentSpeedValue = 0f;
+            
             activeSpline = newSpline;
             _splineLength = activeSpline.CalculateLength();
-            var splineData = activeSpline.Spline;
-
-            // 1. TRADUCTION : On donne notre position "Monde" et on la convertit en position "Locale" pour la spline
-            float3 localPlayerPos = activeSpline.transform.InverseTransformPoint(transform.position);
+            if (_splineLength <= 0f) _splineLength = 0.1f;
+            
+            float3 localPlayerPos = newSpline.transform.InverseTransformPoint(transform.position);
+            
+            SplineUtility.GetNearestPoint(newSpline.Spline, localPlayerPos, out float3 nearestLocalPoint, out float t);
+            
+            _currentDistance = t * _splineLength;
+            
+            Vector3 exactWorldPos = newSpline.transform.TransformPoint(nearestLocalPoint);
+            
+            transform.position = exactWorldPos;
+            charController.enabled = true;
     
-            // 2. CALCUL : La spline cherche le point le plus proche dans son espace à elle
-            SplineUtility.GetNearestPoint(splineData, localPlayerPos, out float3 nearestLocalPos, out float nearestT);
-    
-            // 3. RETRADUCTION : On reconvertit ce point local en vraies coordonnées 3D du jeu
-            Vector3 nearestWorldPos = activeSpline.transform.TransformPoint(nearestLocalPos);
-
-            // 4. On met à jour la distance
-            _currentDistance = nearestT * _splineLength;
-
-            // 5. On déplace le perso à la bonne place (en gardant son Y pour la gravité)
-            transform.position = new Vector3(nearestWorldPos.x, transform.position.y, nearestWorldPos.z);
-    
-            Debug.Log($"Switch validé sur {newSpline.name} à {_currentDistance:F1}m");
+            Debug.Log($"Switch 100% Automatique sur {newSpline.name} !");
         }
+
         public void SetCheckpoint(Vector3 pos, SplineContainer spline, float distance)
         {
             _lastCheckpointPos = pos;
             _lastCheckpointSpline = spline;
             _lastCheckpointDistance = distance;
-            Debug.Log("Checkpoint sauvegardé !");
         }
 
         public void Respawn()
@@ -157,12 +196,10 @@ namespace Character.Runtime
             activeSpline = _lastCheckpointSpline;
             _currentDistance = _lastCheckpointDistance;
             _splineLength = activeSpline.CalculateLength();
-            
-            charController.enabled = false; 
+
+            charController.enabled = false;
             transform.position = _lastCheckpointPos;
             charController.enabled = true;
-    
-            Debug.Log("Respawn au dernier checkpoint !");
         }
     }
 }
