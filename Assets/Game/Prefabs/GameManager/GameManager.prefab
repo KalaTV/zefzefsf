@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1043644111206914764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 641413615124901117}
+  - component: {fileID: 798191361547565444}
+  - component: {fileID: 5267383850921162222}
+  - component: {fileID: 8627527139891935891}
+  - component: {fileID: 1935928744872787423}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &641413615124901117
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043644111206914764}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.10761, y: 0, z: -4.44532}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &798191361547565444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043644111206914764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3373501fc804a9db58f8e01f44b2f1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: HideAndSeekSystem.Runtime::HideAndSeekSystem.Runtime.ShadowManager
+  timeToHide: 10
+  uiPanel: {fileID: 0}
+  warningText: {fileID: 0}
+  timerText: {fileID: 0}
+  shadowPrefabs:
+  - {fileID: 8756390510458379417, guid: 6ccd1da352732cf4fba0f12c9d7c0233, type: 3}
+  spawnPoint: {fileID: 0}
+  numberOfShadowsToSpawn: 5
+  passageDuration: 4
+  isPlayerHidden: 0
+--- !u!114 &5267383850921162222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043644111206914764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 150543944b244830b4a332cd1dd0d8ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ColorSystem.Runtime::ColorSystem.Runtime.GameColorManager
+  globalVolume: {fileID: 0}
+  decaySpeed: 0.5
+  minSaturation: -100
+  currentSaturation: 0
+--- !u!114 &8627527139891935891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043644111206914764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99fa66a80678a574093e29264a9e9b85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EnemyAttachmentSystem.Samples::EnemyAttachmentSystem.Samples.EnemySpawner
+  enemyPrefabs: {fileID: 8756390510458379417, guid: 9950794860c37ad4ab814367785fc241, type: 3}
+  spawnPoint: {fileID: 0}
+--- !u!114 &1935928744872787423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043644111206914764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17acaee3fdf94caba1db805c37e9c4d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PuzzleSystem.Runtime::PuzzleSystem.PuzzleManager

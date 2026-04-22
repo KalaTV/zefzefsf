@@ -1,0 +1,16 @@
+{
+    "name": "EnemyAttachmentSystem.Samples",
+    "rootNamespace": "EnemyAttachmentSystem.Samples",
+    "references": [
+        "GUID:488a5638d0f614e45a57643e8d9cec08"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
