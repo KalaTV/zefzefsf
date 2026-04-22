@@ -1527,7 +1527,7 @@ MonoBehaviour:
       m_LastClickedID:
         m_Data: 0
       m_ExpandedIDs:
-      - m_Data: -2220
+      - m_Data: -1318
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1621,9 +1621,9 @@ MonoBehaviour:
   m_FolderTreeState:
     scrollPos: {x: 0, y: 79}
     m_SelectedIDs:
-    - m_Data: 52480
+    - m_Data: 52058
     m_LastClickedID:
-      m_Data: 52480
+      m_Data: 52058
     m_ExpandedIDs:
     - m_Data: 0
     - m_Data: 51570
