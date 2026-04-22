@@ -1,12 +1,12 @@
 ﻿<Solution>
   <Project Path="HideAndSeekSystem.Runtime.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="PuzzleSystem.Samples.csproj" />
   <Project Path="CircleEyeSystem.Runtime.csproj" />
   <Project Path="FeatherCollectibleSystem.Runtime.csproj" />
   <Project Path="ColorSystem.Runtime.csproj" />
   <Project Path="PuzzleSystem.Runtime.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="EnemyAttachmentSystem.Runtime.csproj" />
   <Project Path="EnemyAttachmentSystem.Samples.csproj" />
+  <Project Path="EnemyAttachmentSystem.Runtime.csproj" />
 </Solution>
