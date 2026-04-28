@@ -10,7 +10,7 @@ public class Checkpoint : MonoBehaviour
         {
             var player = other.GetComponent<PlayerController>();
             
-            player.SetCheckpoint(transform.position, player.activeSpline, player._currentDistance);
+            player.SetCheckpoint(transform.position, player.activeSpline, player.currentDistance);
         }
     }
 }

@@ -62,7 +62,7 @@ public class LevelManager : MonoBehaviour
                 
                 player.SwitchSpline(targetSpline);
                 
-                player._currentDistance = data.distanceOnSpline;
+                player.currentDistance = data.distanceOnSpline;
                 
                 Debug.Log($"✅ Partie chargée : {data.splineName} à {data.distanceOnSpline}m");
             }
