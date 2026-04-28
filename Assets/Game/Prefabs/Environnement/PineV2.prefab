@@ -1,0 +1,129 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4330114363321729466
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1547176514220842105}
+  - component: {fileID: 2820282018768954562}
+  m_Layer: 0
+  m_Name: PineV2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1547176514220842105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4330114363321729466}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 133.17, z: -34.54}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5592424311329657655}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!205 &2820282018768954562
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4330114363321729466}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: -0.025671005, y: 11.3438225, z: 4.4305077}
+  m_Size: 29.824844
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 6761983983779571800}
+  - screenRelativeHeight: 0.3
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 6761983983779571800}
+  - screenRelativeHeight: 0.1
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 6761983983779571800}
+  m_Enabled: 1
+--- !u!1001 &5338719641863550172
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1547176514220842105}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7742555
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.16030712
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5948346
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.14491995
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+      propertyPath: m_Name
+      value: Sapin Tordu 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+--- !u!4 &5592424311329657655 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+  m_PrefabInstance: {fileID: 5338719641863550172}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6761983983779571800 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 3ec1d68584df71c4e9a32ec322c7a19b, type: 3}
+  m_PrefabInstance: {fileID: 5338719641863550172}
+  m_PrefabAsset: {fileID: 0}
