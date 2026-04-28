@@ -20,9 +20,7 @@ namespace HideAndSeekSystem.Runtime
         [Header("Shadow Settings")]
         [SerializeField] private GameObject[] shadowPrefabs;
         [SerializeField] private Transform spawnPoint;
-        [Tooltip("How many shadows will be shown")]
         [SerializeField] private int numberOfShadowsToSpawn = 5;
-        [Tooltip("Time in seconds before shadows will be destroyed")]
         [SerializeField] private float passageDuration = 3f;
         
         [HideInInspector]

@@ -16,7 +16,7 @@ public class SaveSystem : MonoBehaviour
         
         File.WriteAllText(saveFilePath, json);
         
-        Debug.Log("✅ Jeu sauvegardé avec succès dans : " + saveFilePath);
+        Debug.Log("Jeu sauvegardé avec succès dans : " + saveFilePath);
     }
     
     public GameData LoadGame()
@@ -28,12 +28,12 @@ public class SaveSystem : MonoBehaviour
             
             GameData loadedData = JsonUtility.FromJson<GameData>(json);
             
-            Debug.Log("✅ Jeu chargé avec succès !");
+            Debug.Log("Jeu chargé avec succès !");
             return loadedData;
         }
         else
         {
-            Debug.LogWarning("⚠️ Aucun fichier de sauvegarde trouvé.");
+            Debug.LogWarning("️Aucun fichier de sauvegarde trouvé.");
             return null; 
         }
     }

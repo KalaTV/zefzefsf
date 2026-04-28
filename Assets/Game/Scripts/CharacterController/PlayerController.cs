@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Splines;
 using Unity.Mathematics; // Indispensable pour les calculs de Spline
@@ -5,6 +6,7 @@ using PinePie.SimpleJoystick; // Ton joystick
 using EnemyAttachmentSystem.Runtime;
 using FeatherSystem.Runtime;
 using UnityEngine.Serialization;
+using Object = UnityEngine.Object;
 
 namespace Character.Runtime
 {
@@ -22,7 +24,13 @@ namespace Character.Runtime
         public float speed = 5f;
         public float acceleration = 12f;
         public float runMultiplier = 2.18f;
-
+        
+        [Header("Fluidity Settings")]
+        public float splineSwitchSpeed = 8f; 
+        public float rotationSpeed = 12f;
+        
+        private Vector3 transitionOffset = Vector3.zero;
+        
         [Header("Jump Settings")]
         public float jumpHeight = 1.2f;
         public float gravity = -15f;
@@ -62,6 +70,28 @@ namespace Character.Runtime
             }
         }
 
+        private void Start()
+        {
+            if (activeSpline != null)
+            {
+                splineLength = activeSpline.CalculateLength();
+                if (splineLength <= 0) splineLength = 0.1f;
+                
+                float3 localPos = activeSpline.transform.InverseTransformPoint(transform.position);
+                SplineUtility.GetNearestPoint(activeSpline.Spline, localPos, out float3 nearestLocal, out float t);
+                
+                currentDistance = t * splineLength;
+                
+                transitionOffset = Vector3.zero;
+                
+                Vector3 worldTarget = activeSpline.transform.TransformPoint(nearestLocal);
+        
+                charController.enabled = false;
+                transform.position = worldTarget;
+                charController.enabled = true;
+            }
+        }
+
         void Update()
         {
             if (isMovementLocked || activeSpline == null) return;
@@ -77,44 +107,45 @@ namespace Character.Runtime
             ApplyMovementOnSpline(input);
         }
 
-        private void ApplyMovementOnSpline(Vector2 input)
-        {
-            float t = currentDistance / splineLength;
-            Vector3 tangent = activeSpline.EvaluateTangent(t);
-            Vector2 splineDir = new Vector2(tangent.x, tangent.z).normalized;
-            
-            float combinedInput = Vector2.Dot(input, splineDir);
-            
-            Vector2 perpendicularDir = new Vector2(-splineDir.y, splineDir.x);
-            SideInput = Vector2.Dot(input, perpendicularDir);
-            
-            float weightMultiplier = (attachmentManager != null) ? attachmentManager.currentSpeed / attachmentManager.baseSpeed : 1f;
-            float mult = isHunted ? runMultiplier : 1f;
-            float targetSpeed = combinedInput * speed * mult * weightMultiplier;
+       private void ApplyMovementOnSpline(Vector2 input)
+{
+    if (activeSpline == null || splineLength <= 0.1f) return;
+    
+    float t = currentDistance / splineLength;
+    
+    Vector3 targetSplineWorldPos = activeSpline.EvaluatePosition(t); 
+    Vector3 tangent = activeSpline.EvaluateTangent(t);
+    
+    Vector2 splineDir = new Vector2(tangent.x, tangent.z).normalized;
+    float combinedInput = Vector2.Dot(input, splineDir);
+    
+    Vector2 perpendicularDir = new Vector2(-splineDir.y, splineDir.x);
+    SideInput = Vector2.Dot(input, perpendicularDir);
+    
+    float weightMultiplier = (attachmentManager != null) ? attachmentManager.currentSpeed / attachmentManager.baseSpeed : 1f;
+    float mult = isHunted ? runMultiplier : 1f;
+    float targetSpeed = combinedInput * speed * mult * weightMultiplier;
 
-            currentSpeedValue = Mathf.Lerp(currentSpeedValue, targetSpeed, acceleration * Time.deltaTime);
-            currentDistance += currentSpeedValue * Time.deltaTime;
-            currentDistance = Mathf.Clamp(currentDistance, 0f, splineLength);
-            
-            Vector3 targetSplinePos = activeSpline.EvaluatePosition(t);
-            Vector3 horizontalMove = targetSplinePos - transform.position;
-            horizontalMove.y = 0;
-            
-            ApplyGravity();
-            
-            charController.Move(horizontalMove + (verticalVelocity * Time.deltaTime));
-            
-            if (Mathf.Abs(combinedInput) > 0.1f)
-            {
-                spriteRenderer.flipX = (combinedInput < 0);
-                
-                if (tangent != Vector3.zero)
-                {
-                    Quaternion targetRot = Quaternion.LookRotation(tangent);
-                    transform.rotation = Quaternion.Euler(0, targetRot.eulerAngles.y, 0);
-                }
-            }
-        }
+    currentSpeedValue = Mathf.Lerp(currentSpeedValue, targetSpeed, acceleration * Time.deltaTime);
+    
+    currentDistance += currentSpeedValue * Time.deltaTime;
+    currentDistance = Mathf.Clamp(currentDistance, 0f, splineLength);
+    
+    transitionOffset = Vector3.Lerp(transitionOffset, Vector3.zero, splineSwitchSpeed * Time.deltaTime);
+    
+    Vector3 finalTargetPos = targetSplineWorldPos + transitionOffset;
+    
+    Vector3 horizontalMove = finalTargetPos - transform.position;
+    horizontalMove.y = 0; 
+
+    ApplyGravity();
+    
+    charController.Move(horizontalMove + (verticalVelocity * Time.deltaTime));
+    if (Mathf.Abs(combinedInput) > 0.1f)
+    {
+        if(spriteRenderer != null) spriteRenderer.flipX = (combinedInput < -0f);
+    }
+}
 
         public void Jump()
         {
@@ -159,27 +190,23 @@ namespace Character.Runtime
         {
             if (newSpline == null || activeSpline == newSpline) return;
             
-            charController.enabled = false;
-            
-            verticalVelocity = Vector3.zero;
-            currentSpeedValue = 0f;
+            Vector3 startPos = transform.position;
             
             activeSpline = newSpline;
             splineLength = activeSpline.CalculateLength();
             if (splineLength <= 0f) splineLength = 0.1f;
-            
-            float3 localPlayerPos = newSpline.transform.InverseTransformPoint(transform.position);
-            
+    
+            float3 localPlayerPos = newSpline.transform.InverseTransformPoint(startPos);
             SplineUtility.GetNearestPoint(newSpline.Spline, localPlayerPos, out float3 nearestLocalPoint, out float t);
-            
             currentDistance = t * splineLength;
-            
+    
             Vector3 exactWorldPos = newSpline.transform.TransformPoint(nearestLocalPoint);
             
-            transform.position = exactWorldPos;
-            charController.enabled = true;
+            transitionOffset = startPos - exactWorldPos;
+            transitionOffset.y = 0;
     
-            Debug.Log($"Switch 100% Automatique sur {newSpline.name} !");
+            
+            Debug.Log("Switch Fluide sur {newSpline.name}");
         }
 
         public void SetCheckpoint(Vector3 pos, SplineContainer spline, float distance)

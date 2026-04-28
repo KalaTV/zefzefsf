@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FeatherSystem.Runtime.Interactables
+namespace FeatherSystem.Runtime
 {
     public class PushableBlock : MonoBehaviour
     {

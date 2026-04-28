@@ -5,7 +5,6 @@ using UnityEngine.Splines;
 
 public class LevelManager : MonoBehaviour
 {
-    // Singleton pour y accéder facilement depuis n'importe où (ex: LevelManager.Instance.Save())
     public static LevelManager Instance { get; private set; }
 
     [Header("Références")]
@@ -64,11 +63,7 @@ public class LevelManager : MonoBehaviour
                 
                 player.currentDistance = data.distanceOnSpline;
                 
-                Debug.Log($"✅ Partie chargée : {data.splineName} à {data.distanceOnSpline}m");
-            }
-            else
-            {
-                Debug.LogError($"❌ Impossible de trouver la spline nommée : {data.splineName}");
+                Debug.Log(" Partie chargée : {data.splineName} à {data.distanceOnSpline}m");
             }
         }
     }

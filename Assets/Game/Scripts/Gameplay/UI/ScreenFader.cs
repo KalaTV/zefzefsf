@@ -15,13 +15,11 @@ namespace Gameplay.UI
         {
             Instance = this;
             canvasGroup.alpha = 0f;
-            // On s'assure que l'image ne bloque pas les clics au début
             canvasGroup.blocksRaycasts = false;
         }
 
         public IEnumerator FadeOut()
         {
-            // On bloque les clics pendant que c'est noir
             canvasGroup.blocksRaycasts = true;
             
             float timer = 0f;
