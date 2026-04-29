@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1249003066104410506}
+  - {fileID: 5944255731629923062}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &4362765155362329571
@@ -50,17 +50,17 @@ LODGroup:
   - screenRelativeHeight: 0.6
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 80630998955002597}
+    - renderer: {fileID: 0}
   - screenRelativeHeight: 0.3
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 80630998955002597}
+    - renderer: {fileID: 0}
   - screenRelativeHeight: 0.1
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 80630998955002597}
+    - renderer: {fileID: 0}
   m_Enabled: 1
---- !u!1001 &1648283201325209185
+--- !u!1001 &6193720958870420765
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -117,13 +117,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d15b7e2729886f9408a82d27072e086a, type: 3}
---- !u!23 &80630998955002597 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: d15b7e2729886f9408a82d27072e086a, type: 3}
-  m_PrefabInstance: {fileID: 1648283201325209185}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1249003066104410506 stripped
+--- !u!4 &5944255731629923062 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d15b7e2729886f9408a82d27072e086a, type: 3}
-  m_PrefabInstance: {fileID: 1648283201325209185}
+  m_PrefabInstance: {fileID: 6193720958870420765}
   m_PrefabAsset: {fileID: 0}
