@@ -29,7 +29,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7439468212860820806}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &8498026862470148395
@@ -40,8 +41,8 @@ LODGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7397280634786579498}
   serializedVersion: 2
-  m_LocalReferencePoint: {x: -0.7684896, y: 117.40437, z: 7.684505}
-  m_Size: 2.7626104
+  m_LocalReferencePoint: {x: 0.028035074, y: 0.15931296, z: 0.025933981}
+  m_Size: 1.7515461
   m_FadeMode: 0
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
@@ -49,13 +50,80 @@ LODGroup:
   - screenRelativeHeight: 0.6
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 0}
+    - renderer: {fileID: 8607892025779349033}
   - screenRelativeHeight: 0.3
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 0}
+    - renderer: {fileID: 8607892025779349033}
   - screenRelativeHeight: 0.1
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 0}
+    - renderer: {fileID: 8607892025779349033}
   m_Enabled: 1
+--- !u!1001 &6968464526834170541
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3933621139556717527}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.4765194
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.6186614
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.4948703
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.38117024
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 104.79001
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -77.31299
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+      propertyPath: m_Name
+      value: Buisson A Baie Low topo
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+--- !u!4 &7439468212860820806 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+  m_PrefabInstance: {fileID: 6968464526834170541}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8607892025779349033 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: c870d2602ca382e45a44fb34b0f8e10c, type: 3}
+  m_PrefabInstance: {fileID: 6968464526834170541}
+  m_PrefabAsset: {fileID: 0}
