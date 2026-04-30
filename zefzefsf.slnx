@@ -1,5 +1,4 @@
 ﻿<Solution>
-  <Project Path="FlatKit.Utils.Editor.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="HideAndSeekSystem.Runtime.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
