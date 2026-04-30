@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Splines;
 using Unity.Mathematics; // Indispensable pour les calculs de Spline
@@ -39,6 +40,10 @@ namespace Character.Runtime
         [SerializeField] private float glideGravity = -2f; 
         private bool isGliding = false;
 
+        [Header("Wind Settings")]
+        private float windForce = 0f;
+        private bool isWindActive = false;
+        
         [Header("State")]
         public bool isMovementLocked = false;
         public bool isHunted = false;
@@ -106,51 +111,53 @@ namespace Character.Runtime
 
             ApplyMovementOnSpline(input);
         }
+        
+        private void ApplyMovementOnSpline(Vector2 input)
+        {
+            if (activeSpline == null || splineLength <= 0.1f) return;
+            
+            float t = currentDistance / splineLength;
+            
+            Vector3 targetSplineWorldPos = activeSpline.EvaluatePosition(t); 
+            Vector3 tangent = activeSpline.EvaluateTangent(t);
+            
+            Vector2 splineDir = new Vector2(tangent.x, tangent.z).normalized;
+            float combinedInput = Vector2.Dot(input, splineDir);
+            
+            Vector2 perpendicularDir = new Vector2(-splineDir.y, splineDir.x);
+            SideInput = Vector2.Dot(input, perpendicularDir);
+            
+            float weightMultiplier = (attachmentManager != null) ? attachmentManager.currentSpeed / attachmentManager.baseSpeed : 1f;
+            float mult = isHunted ? runMultiplier : 1f;
+            float targetSpeed = combinedInput * speed * mult * weightMultiplier;
 
-       private void ApplyMovementOnSpline(Vector2 input)
-{
-    if (activeSpline == null || splineLength <= 0.1f) return;
-    
-    float t = currentDistance / splineLength;
-    
-    Vector3 targetSplineWorldPos = activeSpline.EvaluatePosition(t); 
-    Vector3 tangent = activeSpline.EvaluateTangent(t);
-    
-    Vector2 splineDir = new Vector2(tangent.x, tangent.z).normalized;
-    float combinedInput = Vector2.Dot(input, splineDir);
-    
-    Vector2 perpendicularDir = new Vector2(-splineDir.y, splineDir.x);
-    SideInput = Vector2.Dot(input, perpendicularDir);
-    
-    float weightMultiplier = (attachmentManager != null) ? attachmentManager.currentSpeed / attachmentManager.baseSpeed : 1f;
-    float mult = isHunted ? runMultiplier : 1f;
-    float targetSpeed = combinedInput * speed * mult * weightMultiplier;
+            currentSpeedValue = Mathf.Lerp(currentSpeedValue, targetSpeed, acceleration * Time.deltaTime);
+            
+            float finalMove = (currentSpeedValue + windForce) * Time.deltaTime;
+            currentDistance += finalMove;
+            
+            currentDistance = Mathf.Clamp(currentDistance, 0f, splineLength);
+            
+            transitionOffset = Vector3.Lerp(transitionOffset, Vector3.zero, splineSwitchSpeed * Time.deltaTime);
+            
+            Vector3 finalTargetPos = targetSplineWorldPos + transitionOffset;
+            
+            Vector3 horizontalMove = finalTargetPos - transform.position;
+            horizontalMove.y = 0; 
 
-    currentSpeedValue = Mathf.Lerp(currentSpeedValue, targetSpeed, acceleration * Time.deltaTime);
-    
-    currentDistance += currentSpeedValue * Time.deltaTime;
-    currentDistance = Mathf.Clamp(currentDistance, 0f, splineLength);
-    
-    transitionOffset = Vector3.Lerp(transitionOffset, Vector3.zero, splineSwitchSpeed * Time.deltaTime);
-    
-    Vector3 finalTargetPos = targetSplineWorldPos + transitionOffset;
-    
-    Vector3 horizontalMove = finalTargetPos - transform.position;
-    horizontalMove.y = 0; 
-
-    ApplyGravity();
-    
-    charController.Move(horizontalMove + (verticalVelocity * Time.deltaTime));
-    if (Mathf.Abs(combinedInput) > 0.1f)
-    {
-        if(spriteRenderer != null) spriteRenderer.flipX = (combinedInput < -0f);
-    }
-}
+            ApplyGravity();
+            
+            charController.Move(horizontalMove + (verticalVelocity * Time.deltaTime));
+            if (Mathf.Abs(combinedInput) > 0.1f)
+            {
+                if(spriteRenderer != null) spriteRenderer.flipX = (combinedInput < -0f);
+            }
+        }
 
         public void Jump()
         {
             PlayerPowers powers = Object.FindFirstObjectByType<PlayerPowers>();
-            
+                    
             if (charController.isGrounded)
             {
                 verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
@@ -159,7 +166,7 @@ namespace Character.Runtime
             else if (powers.hasGlideFeather)
             {
                 isGliding = !isGliding;
-                
+                        
                 if(isGliding && verticalVelocity.y < 0) 
                 {
                     verticalVelocity.y = -1f; 
@@ -228,6 +235,25 @@ namespace Character.Runtime
             charController.enabled = false;
             transform.position = lastCheckpointPos;
             charController.enabled = true;
+        }
+        
+        public void TriggerWind(float strength, float duration)
+        {
+            StartCoroutine(WindCoroutine(strength, duration));
+        }
+        
+        private IEnumerator WindCoroutine(float strength, float duration)
+        {
+            isWindActive = true;
+            float elapsed = 0;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                windForce = -strength; 
+                yield return null;
+            }
+            windForce = 0f;
+            isWindActive = false;
         }
     }
 }
