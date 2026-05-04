@@ -56,7 +56,6 @@ public class OptimizationWindow : EditorWindow
             GUILayout.Label("Scene Stats", EditorStyles.boldLabel);
 
             GUILayout.Label($"Lights: {sceneAnalyzer.GetLightCount()}");
-            GUILayout.Label($"Estimated Build Size: {FormatSize(sceneAnalyzer.GetBuildSize())}");
         }
 
         if (!string.IsNullOrEmpty(selectedType))
@@ -75,19 +74,5 @@ public class OptimizationWindow : EditorWindow
             GUILayout.Space(10);
             duplicateAnalyzer.Draw();
         }
-    }
-    
-    private string FormatSize(float bytes)
-    {
-        string[] sizes = { "B", "KB", "MB", "GB" };
-        int order = 0;
-
-        while (bytes >= 1024 && order < sizes.Length - 1)
-        {
-            order++;
-            bytes /= 1024;
-        }
-
-        return $"{bytes:0.##} {sizes[order]}";
     }
 }

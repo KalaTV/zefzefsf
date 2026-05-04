@@ -68,13 +68,6 @@ public class SceneAssetAnalyzer
         
         var lights = Object.FindObjectsOfType<Light>();
         totalLights = lights.Length;
-        
-        estimatedBuildSize = 0f;
-
-        foreach (var kvp in data)
-        {
-            estimatedBuildSize += kvp.Value;
-        }
     }
 
     private void Add(string type, float size, GameObject go)
