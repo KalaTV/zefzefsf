@@ -5,11 +5,11 @@ using System.Collections;
 
 public class DeathZone : MonoBehaviour
 {
-    private bool _isResetting = false;
+    private bool isResetting = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !_isResetting)
+        if (other.CompareTag("Player") && !isResetting)
         {
             StartCoroutine(DeathRoutine(other.GetComponent<PlayerController>()));
         }
@@ -17,7 +17,7 @@ public class DeathZone : MonoBehaviour
 
     private IEnumerator DeathRoutine(PlayerController player)
     {
-        _isResetting = true;
+        isResetting = true;
         player.isMovementLocked = true;
         
         if (ScreenFader.Instance != null)
@@ -31,6 +31,6 @@ public class DeathZone : MonoBehaviour
             yield return ScreenFader.Instance.FadeIn();
 
         player.isMovementLocked = false;
-        _isResetting = false;
+        isResetting = false;
     }
 }

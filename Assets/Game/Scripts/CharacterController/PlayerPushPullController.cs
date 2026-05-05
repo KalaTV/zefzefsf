@@ -1,7 +1,7 @@
 using UnityEngine;
 using Character.Runtime;
 using PinePie.SimpleJoystick;
-using FeatherSystem.Runtime.Interactables;
+using FeatherSystem.Runtime;
 
 public class PlayerPushPullController : MonoBehaviour
 {

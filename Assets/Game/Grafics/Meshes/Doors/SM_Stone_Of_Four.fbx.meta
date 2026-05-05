@@ -3,7 +3,22 @@ guid: ed90bd8ce5c3cc54d99ddde598d8018a
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 1de76f6ddf33f5b4badc1e7f32a0dae7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: diques
+    second: {fileID: 2100000, guid: 10aa39e1fe21fb54e91014edbc6113af, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: diques dark
+    second: {fileID: 2100000, guid: 85a50841f273a104f91a31e034caffca, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
