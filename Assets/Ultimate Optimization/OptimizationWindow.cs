@@ -56,6 +56,7 @@ public class OptimizationWindow : EditorWindow
             GUILayout.Label("Scene Stats", EditorStyles.boldLabel);
 
             GUILayout.Label($"Lights: {sceneAnalyzer.GetLightCount()}");
+          
         }
 
         if (!string.IsNullOrEmpty(selectedType))
@@ -75,4 +76,6 @@ public class OptimizationWindow : EditorWindow
             duplicateAnalyzer.Draw();
         }
     }
+    
+    
 }
