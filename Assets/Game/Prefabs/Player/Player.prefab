@@ -113,7 +113,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1758879391, guid: 8566a26c91dae0547a50eb492b8c542f, type: 3}
+  m_Sprite: {fileID: -1667431270, guid: e7693dd4c461ddb4eadf801673d1ed26, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -422,16 +422,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d117b19f4b2e4f7408eea2f28d374c81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Character.Runtime::Character.Runtime.PlayerController
+  currentMode: 0
   joystick: {fileID: 0}
   activeSpline: {fileID: 0}
   speed: 5
   acceleration: 12
   runMultiplier: 2.18
+  splineSwitchSpeed: 8
+  rotationSpeed: 12
   jumpHeight: 2
   gravity: -19.62
+  glideGravity: -2
   isMovementLocked: 0
   isHunted: 0
-  _currentDistance: 0
+  currentDistance: 0
 --- !u!114 &6831029629382822676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,6 +507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FeatherCollectibleSystem.Runtime::FeatherSystem.Runtime.PlayerPowers
   hasFireFeather: 0
+  hasGlideFeather: 0
 --- !u!114 &7982018537370061621
 MonoBehaviour:
   m_ObjectHideFlags: 0
