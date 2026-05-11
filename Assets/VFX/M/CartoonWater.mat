@@ -120,9 +120,9 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RippleDensity: 15.26
-    - _RipplesSlimness: 15.23
-    - _RipplesSpeed: 0.82
+    - _RippleDensity: 49.3
+    - _RipplesSlimness: 8.3
+    - _RipplesSpeed: 1.01
     - _SampleGI: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -130,7 +130,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _WaveSpeed: 0.001
+    - _WaveSpeed: 0.05
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
