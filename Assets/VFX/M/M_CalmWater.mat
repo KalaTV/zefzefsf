@@ -39,7 +39,7 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _RippleDensity: 19.61
+    - _RippleDensity: 30
     - _RipplesSlimness: 4.7
     - _RipplesSpeed: 2.16
     - _WaveAmount: 0
