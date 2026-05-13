@@ -5,6 +5,7 @@
   <Project Path="PuzzleSystem.Samples.csproj" />
   <Project Path="CircleEyeSystem.Runtime.csproj" />
   <Project Path="FeatherCollectibleSystem.Runtime.csproj" />
+  <Project Path="EasyWallCollider.csproj" />
   <Project Path="ColorSystem.Runtime.csproj" />
   <Project Path="PuzzleSystem.Runtime.csproj" />
   <Project Path="EnemyAttachmentSystem.Samples.csproj" />
