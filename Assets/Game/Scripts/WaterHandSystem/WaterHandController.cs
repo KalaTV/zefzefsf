@@ -4,22 +4,8 @@ using UnityEngine;
 using Character.Runtime;
 using PinePie.SimpleJoystick;
 
-/// <summary>
-/// Comportement d'une main qui émerge de l'eau, attrape le joueur et le traîne vers le bas.
-/// À placer sur le prefab de la main. Spawné par WaterHandSpawner.
-///
-/// Cycle de vie :
-///   1. EMERGE  — la main monte depuis sous la surface jusqu'à sa hauteur cible
-///   2. CHASE   — la main glisse horizontalement vers le joueur (sur la surface)
-///   3. GRAB    — collision avec le joueur → il est verrouillé, doit spammer pour se libérer
-///   4. DRAG    — si le joueur ne se libère pas à temps → tiré vers le bas → respawn
-///   5. RETREAT — si le joueur se libère → la main redescend et se détruit
-/// </summary>
 public class WaterHandController : MonoBehaviour
 {
-    // ─────────────────────────────────────────
-    // Paramètres Inspector
-    // ─────────────────────────────────────────
     [Header("Émergence")]
     [Tooltip("Hauteur au-dessus du point de spawn jusqu'où la main monte")]
     public float emergeHeight = 1.8f;
@@ -45,16 +31,8 @@ public class WaterHandController : MonoBehaviour
     [Header("Retraite")]
     [Tooltip("Vitesse de descente quand le joueur se libère")]
     public float retreatSpeed = 5f;
-
-    // ─────────────────────────────────────────
-    // Event pour le spawner
-    // ─────────────────────────────────────────
-    /// <summary>Déclenché juste avant que la main se détruise.</summary>
     public event Action OnHandDestroyed;
 
-    // ─────────────────────────────────────────
-    // État interne
-    // ─────────────────────────────────────────
     private enum HandState { Emerge, Chase, Grab, Drag, Retreat }
     private HandState state = HandState.Emerge;
 
@@ -62,8 +40,7 @@ public class WaterHandController : MonoBehaviour
     private JoystickController joystick;
     private Vector3 spawnPos;
     private Vector3 emergeTargetPos;
-
-    // Escape mechanic
+    
     private float escapeTimer;
     private int   escapeInputCount;
     private Vector2 lastJoystickInput;
@@ -74,11 +51,9 @@ public class WaterHandController : MonoBehaviour
         emergeTargetPos = spawnPos + Vector3.up * emergeHeight;
     }
 
-    /// <summary>Appelé par WaterHandSpawner après l'instantiation.</summary>
     public void Init(PlayerController target)
     {
         player   = target;
-        // Récupérer le joystick depuis le PlayerController via réflexion field
         joystick = target.GetComponentInChildren<JoystickController>();
     }
 
@@ -94,7 +69,6 @@ public class WaterHandController : MonoBehaviour
         }
     }
 
-    // ─── 1. EMERGE ───────────────────────────────────────────────────
     private void UpdateEmerge()
     {
         transform.position = Vector3.MoveTowards(
@@ -108,7 +82,6 @@ public class WaterHandController : MonoBehaviour
         }
     }
 
-    // ─── 2. CHASE ────────────────────────────────────────────────────
     private void UpdateChase()
     {
         if (player == null) { SelfDestroy(); return; }
@@ -123,7 +96,6 @@ public class WaterHandController : MonoBehaviour
             transform.position, target, chaseSpeed * Time.deltaTime
         );
 
-        // Rotation du mesh vers le joueur
         Vector3 dir = target - transform.position;
         if (dir.sqrMagnitude > 0.01f)
         {
@@ -131,7 +103,6 @@ public class WaterHandController : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(dir);
         }
 
-        // Distance horizontale seulement
         float dist = new Vector2(
             transform.position.x - player.transform.position.x,
             transform.position.z - player.transform.position.z
@@ -140,8 +111,7 @@ public class WaterHandController : MonoBehaviour
         if (dist <= grabRange)
             StartGrab();
     }
-
-    // ─── 3. GRAB ─────────────────────────────────────────────────────
+    
     private void StartGrab()
     {
         state            = HandState.Grab;
@@ -157,24 +127,19 @@ public class WaterHandController : MonoBehaviour
     private void UpdateGrab()
     {
         if (player == null) { SelfDestroy(); return; }
-
-        // Coller la main au joueur
+        
         transform.position = player.transform.position + Vector3.down * 0.3f;
 
         escapeTimer -= Time.deltaTime;
-
-        // Lire l'input du joystick PinePie
+        
         Vector2 currentInput = (joystick != null) ? joystick.InputDirection : Vector2.zero;
 
-        // Détecter un changement de direction franc (spam)
-        // On compte chaque fois que la magnitude passe d'un côté à l'autre de 0.7
         float currentMag = currentInput.magnitude;
         float lastMag    = lastJoystickInput.magnitude;
 
         bool wasActive  = lastMag > 0.7f;
         bool nowActive  = currentMag > 0.7f;
-
-        // Alternance actif / inactif = 1 input compté
+        
         if (!wasActive && nowActive)
         {
             escapeInputCount++;
@@ -182,8 +147,7 @@ public class WaterHandController : MonoBehaviour
         }
 
         lastJoystickInput = currentInput;
-
-        // Afficher progression (optionnel - à brancher sur une UI)
+        
         float escapeProgress = (float)escapeInputCount / escapeInputsRequired;
 
         if (escapeInputCount >= escapeInputsRequired)
@@ -195,8 +159,7 @@ public class WaterHandController : MonoBehaviour
         if (escapeTimer <= 0f)
             state = HandState.Drag;
     }
-
-    // ─── 4. DRAG ─────────────────────────────────────────────────────
+    
     private void UpdateDrag()
     {
         if (player == null) { SelfDestroy(); return; }
@@ -213,8 +176,7 @@ public class WaterHandController : MonoBehaviour
             SelfDestroy();
         }
     }
-
-    // ─── 5. RETREAT ──────────────────────────────────────────────────
+    
     private void EscapePlayer()
     {
         player.isMovementLocked = false;
@@ -231,10 +193,7 @@ public class WaterHandController : MonoBehaviour
         if (Vector3.Distance(transform.position, spawnPos) < 0.05f)
             SelfDestroy();
     }
-
-    // ─────────────────────────────────────────
-    // Utilitaires
-    // ─────────────────────────────────────────
+    
     private void SelfDestroy()
     {
         if (player != null && (state == HandState.Grab || state == HandState.Drag))
@@ -249,8 +208,7 @@ public class WaterHandController : MonoBehaviour
         if (player != null && player.isMovementLocked)
             player.isMovementLocked = false;
     }
-
-#if UNITY_EDITOR
+    
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0.2f, 0.6f, 1f, 0.6f);
@@ -264,5 +222,4 @@ public class WaterHandController : MonoBehaviour
         Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
         Gizmos.DrawLine(origin, origin + Vector3.down * dragDepth);
     }
-#endif
 }
