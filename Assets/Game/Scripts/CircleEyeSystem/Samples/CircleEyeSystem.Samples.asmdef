@@ -1,0 +1,16 @@
+{
+    "name": "CircleEyeSystem.Samples",
+    "rootNamespace": "CircleEyeSystem.Samples",
+    "references": [
+        "GUID:4cc5634f58eecb64e8a283989e2947d3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 8139585247031312817}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.51, y: 0.11, z: -2.36}
+  m_LocalPosition: {x: 6.0951304, y: 102.0209, z: -4.7060194}
   m_LocalScale: {x: 5, y: 0.03, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -128,3 +128,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: CircleEyeSystem.Runtime::CircleEyeSystem.Runtime.RandomMovingCircle
   settings: {fileID: 11400000, guid: 7a50e628563cfe04a969091e39298e83, type: 2}
+  pupil: {fileID: 0}

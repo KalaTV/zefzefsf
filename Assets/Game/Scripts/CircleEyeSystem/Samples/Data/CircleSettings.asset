@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CircleSettings
   m_EditorClassIdentifier: CircleEyeSystem.Runtime::CircleSettings
   moveSpeed: 2
-  wanderRadius: 10
+  wanderRadius: 21.25
   detectionRadius: 3
   playerLayer:
     serializedVersion: 2
