@@ -59,13 +59,13 @@ public class ArcMenu : MonoBehaviour,
 
         for (int i = 0; i < tabs.Length; i++)
         {
-            // Rotation infinie
+            // Rotation
             float angle =
                 (-arcAngle * 0.5f)
                 + (i * angleStep)
                 + currentRotation;
 
-            // Boucle infinie
+            // Boucle
             while (angle < -arcAngle * 0.5f)
             {
                 angle += arcAngle + angleStep;
@@ -84,7 +84,7 @@ public class ArcMenu : MonoBehaviour,
             tabs[i].anchoredPosition =
                 new Vector2(x, y);
 
-            // Toujours horizontal
+            //horizontal
             tabs[i].rotation =
                 Quaternion.identity;
 
