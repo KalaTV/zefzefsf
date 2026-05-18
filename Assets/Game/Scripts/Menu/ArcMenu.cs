@@ -2,10 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class ArcMenu : MonoBehaviour,
-    IBeginDragHandler,
-    IDragHandler,
-    IEndDragHandler
+public class ArcMenu : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("Tabs")]
     [SerializeField] private RectTransform[] tabs;
@@ -14,7 +11,6 @@ public class ArcMenu : MonoBehaviour,
     [SerializeField] private float radius = 500f;
     [SerializeField] private float arcAngle = 120f;
     
-
     [Header("Movement")]
     [SerializeField] private float dragSensitivity = 0.2f;
     [SerializeField] private float smoothSpeed = 8f;
@@ -43,12 +39,7 @@ public class ArcMenu : MonoBehaviour,
 
     void Update()
     {
-        currentRotation = Mathf.Lerp(
-            currentRotation,
-            targetRotation,
-            Time.deltaTime * smoothSpeed
-        );
-
+        currentRotation = Mathf.Lerp(currentRotation, targetRotation, Time.deltaTime * smoothSpeed);
         UpdateTabs();
     }
 
@@ -60,10 +51,7 @@ public class ArcMenu : MonoBehaviour,
         for (int i = 0; i < tabs.Length; i++)
         {
             // Rotation
-            float angle =
-                (-arcAngle * 0.5f)
-                + (i * angleStep)
-                + currentRotation;
+            float angle = (-arcAngle * 0.5f) + (i * angleStep) + currentRotation;
 
             // Boucle
             while (angle < -arcAngle * 0.5f)
@@ -81,12 +69,10 @@ public class ArcMenu : MonoBehaviour,
             float x = Mathf.Cos(rad) * radius;
             float y = Mathf.Sin(rad) * radius;
 
-            tabs[i].anchoredPosition =
-                new Vector2(x, y);
+            tabs[i].anchoredPosition = new Vector2(x, y);
 
             //horizontal
-            tabs[i].rotation =
-                Quaternion.identity;
+            tabs[i].rotation = Quaternion.identity;
 
             // Détection du plus à droite
             if (x > bestX)
@@ -105,44 +91,25 @@ public class ArcMenu : MonoBehaviour,
     {
         for (int i = 0; i < tabs.Length; i++)
         {
-            bool selected =
-                i == selectedIndex;
+            bool selected = i == selectedIndex;
 
-            Color targetColor =
-                selected
-                    ? selectedColor
-                    : normalColor;
+            Color targetColor = selected ? selectedColor : normalColor;
 
-            float targetScale =
-                selected
-                    ? selectedScale
-                    : normalScale;
+            float targetScale = selected ? selectedScale : normalScale;
 
             // SCALE
-            tabs[i].localScale =
-                Vector3.Lerp(
-                    tabs[i].localScale,
-                    Vector3.one * targetScale,
-                    Time.deltaTime * 10f
-                );
+            tabs[i].localScale = Vector3.Lerp(tabs[i].localScale, Vector3.one * targetScale,Time.deltaTime * 10f);
 
             // IMAGE COLOR
-            Image image =
-                tabs[i].GetComponent<Image>();
+            Image image = tabs[i].GetComponent<Image>();
 
             if (image != null)
             {
-                image.color =
-                    Color.Lerp(
-                        image.color,
-                        targetColor,
-                        Time.deltaTime * 10f
-                    );
+                image.color = Color.Lerp(image.color, targetColor,Time.deltaTime * 10f);
             }
 
             // BUTTON INTERACTION
-            Button button =
-                tabs[i].GetComponent<Button>();
+            Button button = tabs[i].GetComponent<Button>();
 
             if (button != null)
             {
@@ -154,30 +121,22 @@ public class ArcMenu : MonoBehaviour,
     public void OnBeginDrag(
         PointerEventData eventData)
     {
-        lastPointerPosition =
-            eventData.position;
+        lastPointerPosition = eventData.position;
     }
 
     public void OnDrag(
         PointerEventData eventData)
     {
-        Vector2 delta =
-            eventData.position
-            - lastPointerPosition;
+        Vector2 delta = eventData.position - lastPointerPosition;
 
-        targetRotation +=
-            delta.y * dragSensitivity;
+        targetRotation += delta.y * dragSensitivity;
 
-        lastPointerPosition =
-            eventData.position;
+        lastPointerPosition = eventData.position;
     }
 
     public void OnEndDrag(
         PointerEventData eventData)
     {
-        targetRotation =
-            Mathf.Round(
-                targetRotation / angleStep
-            ) * angleStep;
+        targetRotation = Mathf.Round(targetRotation / angleStep) * angleStep;
     }
 }

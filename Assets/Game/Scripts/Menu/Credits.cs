@@ -6,7 +6,10 @@ public class Credits : MonoBehaviour
     [SerializeField] private CanvasGroup creditsOverlay;
     
     [SerializeField] private bool fadeOut = false;
+    [SerializeField] private float fadeOutDuration = 1;
+    
     [SerializeField] private bool fadeIn = false;
+    [SerializeField] private float fadeInDuration = 1;
 
     public void creditsOpen()
     {
@@ -28,7 +31,7 @@ public class Credits : MonoBehaviour
         {
             if (creditsOverlay.alpha < 1)
             {
-                creditsOverlay.alpha += Time.deltaTime;
+                creditsOverlay.alpha += Time.deltaTime * fadeInDuration;
                 if (creditsOverlay.alpha >= 1)
                         fadeIn = false;
                     
@@ -39,7 +42,7 @@ public class Credits : MonoBehaviour
         {
             if (creditsOverlay.alpha >= 0)
             {
-                creditsOverlay.alpha -= Time.deltaTime;
+                creditsOverlay.alpha -= Time.deltaTime * fadeOutDuration;
                 if (creditsOverlay.alpha == 0)
                     fadeOut = false;
                     
