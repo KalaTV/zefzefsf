@@ -39,9 +39,6 @@ public class LevelManager : MonoBehaviour
         if (attachmentManager != null)
             data.enemiesAttached = attachmentManager.currentAttachedCount;
 
-        // On sauvegarde toujours en mode Spline — le mode libre n'est pas persisté
-        // (le joueur repart depuis la dernière spline connue au prochain lancement)
-
         saveSystem.SaveGame(data);
         Debug.Log("💾 Partie sauvegardée !");
     }
@@ -65,10 +62,8 @@ public class LevelManager : MonoBehaviour
         {
             Debug.LogWarning($"[LevelManager] Pas de SplineContainer sur '{data.splineName}'.");
             return;
-        }
-
-        // Si le joueur était en mode libre au moment de la sauvegarde,
-        // on le force d'abord en mode Spline avant de switcher
+        } 
+        
         if (player.MovementMode == PlayerMovementMode.Free)
             player.ExitFreeMovement(targetSpline, data.distanceOnSpline);
         else
