@@ -3,11 +3,15 @@ using UnityEngine;
 
 public class Credits : MonoBehaviour
 {
+    
+    [Header("CanvaGroup")]
     [SerializeField] private CanvasGroup creditsOverlay;
     
+    [Header("FadeOut")]
     [SerializeField] private bool fadeOut = false;
     [SerializeField] private float fadeOutDuration = 1;
     
+    [Header("FadeIn")]
     [SerializeField] private bool fadeIn = false;
     [SerializeField] private float fadeInDuration = 1;
 
@@ -34,7 +38,6 @@ public class Credits : MonoBehaviour
                 creditsOverlay.alpha += Time.deltaTime * fadeInDuration;
                 if (creditsOverlay.alpha >= 1)
                         fadeIn = false;
-                    
             }
         }
         
@@ -45,7 +48,6 @@ public class Credits : MonoBehaviour
                 creditsOverlay.alpha -= Time.deltaTime * fadeOutDuration;
                 if (creditsOverlay.alpha == 0)
                     fadeOut = false;
-                    
             }
         }
     }
