@@ -3,14 +3,13 @@ using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
-    private static readonly string FirstPlay = "First_Play";
+    private static readonly string FirstPlay = "FirstPlay";
     private static readonly string BackgroundPrefs = "BackgroundPrefs";
     private static readonly string SoundEffectsPrefs = "SoundEffectsPrefs";
-    
     private int firstPlayInt;
     
-    [SerializeField] private Slider backgroundSlider, soundEffectSlider;
-    [SerializeField] private float backGroundVolume,  soundEffectVolume;
+    public Slider backgroundSlider, soundEffectSlider;
+    private float backGroundVolume, soundEffectVolume;
     
     [SerializeField] private AudioSource backgroundAudio;
     [SerializeField] private AudioSource [] soundEffectAudio;
@@ -21,8 +20,8 @@ public class AudioManager : MonoBehaviour
         
         if (firstPlayInt == 0)
         {
-            backGroundVolume = 0.125f;
-            soundEffectVolume = 0.75f;
+            backGroundVolume = .125f;
+            soundEffectVolume = .5f;
             
             backgroundSlider.value = backGroundVolume;
             soundEffectSlider.value = soundEffectVolume;
@@ -43,8 +42,8 @@ public class AudioManager : MonoBehaviour
         
     public void SaveSoundSettings()
     {
-        PlayerPrefs.SetFloat(BackgroundPrefs, backGroundVolume);
-        PlayerPrefs.SetFloat(SoundEffectsPrefs, soundEffectVolume);
+        PlayerPrefs.SetFloat(BackgroundPrefs, backgroundSlider.value);
+        PlayerPrefs.SetFloat(SoundEffectsPrefs, soundEffectSlider.value);
     }
 
     void OnApplicationFocus(bool inFocus)
