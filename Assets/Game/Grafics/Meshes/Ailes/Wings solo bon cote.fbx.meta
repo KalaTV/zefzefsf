@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Game/Grafics/Meshes/Ailes/Wings solo.fbx.meta
-guid: f54fce92c69890346ac3416e62a44e62
-========
-guid: e7cec1861e334a04bb2326f57aa6a157
->>>>>>>> origin/Eliott:Assets/Game/Grafics/Meshes/Ailes/Wings.fbx.meta
+guid: 9d32ab2c1bd67f3408448de104f16d60
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
