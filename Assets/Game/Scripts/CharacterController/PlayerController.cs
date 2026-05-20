@@ -26,7 +26,6 @@ namespace Character.Runtime
         private float _freeRotSpeed;
         private bool  _freeApplyGravity;
 
-       
         [Header("Components")]
         [SerializeField] private JoystickController joystick;
         public SplineContainer activeSpline;
@@ -35,9 +34,12 @@ namespace Character.Runtime
         private CharacterController charController;
         private Animator animator;
 
-        // Paramètre Animator pour l'animation de marche
+        // Paramètres Animator
         private static readonly int IsWalking = Animator.StringToHash("isWalking");
-        
+        private static readonly int IsJumping = Animator.StringToHash("isJumping");
+        private static readonly int IsFalling = Animator.StringToHash("isFalling");
+        private static readonly int IsLanding = Animator.StringToHash("isLanding");
+
         [Header("Movement Settings")]
         public float speed = 5f;
         public float acceleration = 12f;
@@ -60,7 +62,7 @@ namespace Character.Runtime
         [Header("Wind Settings")]
         private float windForce = 0f;
         private bool isWindActive = false;
-        
+
         [Header("State")]
         public bool isMovementLocked = false;
         public bool isHunted = false;
@@ -73,12 +75,20 @@ namespace Character.Runtime
         public float VerticalInput { get; private set; }
         public float SideInput     { get; private set; }
         public float CurrentDistance => currentDistance;
-        
+
         [Header("Respawn System")]
         private Vector3        lastCheckpointPos;
         private SplineContainer lastCheckpointSpline;
         private float          lastCheckpointDistance;
-        
+
+        // --- États aériens ---
+        private bool  _wasGrounded    = true;
+        private bool  _isLanding      = false;
+        private float _landingTimer   = 0f;
+
+        [Header("Landing Settings")]
+        [SerializeField] private float landingDuration = 0.25f;
+
         void Awake()
         {
             charController    = GetComponent<CharacterController>();
@@ -113,10 +123,9 @@ namespace Character.Runtime
                 charController.enabled = true;
             }
         }
-        
+
         void Update()
         {
-            // En mode libre on ne bloque pas sur activeSpline == null
             if (isMovementLocked) return;
             if (MovementMode == PlayerMovementMode.Spline && activeSpline == null) return;
 
@@ -135,14 +144,40 @@ namespace Character.Runtime
         }
 
         /// <summary>
-        /// Met à jour le paramètre "isWalking" de l'Animator selon que le personnage bouge ou non.
+        /// Met à jour tous les paramètres d'animation liés au mouvement et à l'état aérien.
         /// </summary>
-        private void UpdateWalkAnimation(bool isMoving)
+        private void UpdateAirborneAnimation(bool isMovingHorizontally)
         {
-            if (animator != null)
-                animator.SetBool(IsWalking, isMoving);
+            if (animator == null) return;
+
+            bool grounded = charController.isGrounded;
+
+            // Détection de l'atterrissage (transition air → sol)
+            if (!_wasGrounded && grounded)
+            {
+                _isLanding    = true;
+                _landingTimer = landingDuration;
+            }
+
+            // Décompte du timer de landing
+            if (_isLanding)
+            {
+                _landingTimer -= Time.deltaTime;
+                if (_landingTimer <= 0f)
+                    _isLanding = false;
+            }
+
+            bool jumping = !grounded && verticalVelocity.y > 0f;
+            bool falling = !grounded && verticalVelocity.y < 0f;
+
+            animator.SetBool(IsWalking, grounded && !_isLanding && isMovingHorizontally);
+            animator.SetBool(IsJumping, jumping);
+            animator.SetBool(IsFalling, falling);
+            animator.SetBool(IsLanding, _isLanding);
+
+            _wasGrounded = grounded;
         }
-        
+
         private void HandleSplineMovement()
         {
             Vector2 input = (joystick != null) ? joystick.InputDirection : Vector2.zero;
@@ -186,14 +221,13 @@ namespace Character.Runtime
             ApplyGravity();
             charController.Move(horizontalMove + (verticalVelocity * Time.deltaTime));
 
-            // Animation de marche : active si le joueur appuie et est au sol
-            bool isMoving = Mathf.Abs(combinedInput) > 0.1f && charController.isGrounded;
-            UpdateWalkAnimation(isMoving);
+            bool isMoving = Mathf.Abs(combinedInput) > 0.1f;
+            UpdateAirborneAnimation(isMoving);
 
             if (Mathf.Abs(combinedInput) > 0.1f && spriteRenderer != null)
                 spriteRenderer.flipX = (combinedInput < 0f);
         }
-        
+
         public void EnterFreeMovement(float moveSpeed, float rotSpeed, bool applyGravity)
         {
             if (MovementMode == PlayerMovementMode.Free) return;
@@ -201,23 +235,23 @@ namespace Character.Runtime
             _freeMoveSpeed    = moveSpeed;
             _freeRotSpeed     = rotSpeed;
             _freeApplyGravity = applyGravity;
-            
+
             verticalVelocity = Vector3.zero;
-            
+
             transform.rotation = Quaternion.Euler(0f, 90f, 0f);
 
             MovementMode = PlayerMovementMode.Free;
 
             Debug.Log("[PlayerController] Mode libre activé");
         }
-        
+
         public void ExitFreeMovement(SplineContainer returnSpline, float distanceOnSpline = 0f)
         {
             if (MovementMode != PlayerMovementMode.Free) return;
-            
+
             verticalVelocity  = Vector3.zero;
             currentSpeedValue = 0f;
-            
+
             transform.rotation = Quaternion.Euler(0f, 90f, 0f);
 
             MovementMode = PlayerMovementMode.Spline;
@@ -233,7 +267,7 @@ namespace Character.Runtime
             Vector2 input = (joystick != null) ? joystick.InputDirection : Vector2.zero;
             VerticalInput = input.y;
             SideInput     = input.x;
-            
+
             Camera cam = Camera.main;
             if (cam == null) return;
 
@@ -252,14 +286,13 @@ namespace Character.Runtime
             {
                 moveDir.Normalize();
                 horizontalMove = moveDir * _freeMoveSpeed * Time.deltaTime;
-                
+
                 if (spriteRenderer != null)
                     spriteRenderer.flipX = (input.x < 0f);
             }
-            
-            // Animation de marche en mode libre : active si le joueur bouge et est au sol
-            bool isMoving = moveDir.sqrMagnitude > 0.01f && charController.isGrounded;
-            UpdateWalkAnimation(isMoving);
+
+            bool isMoving = moveDir.sqrMagnitude > 0.01f;
+            UpdateAirborneAnimation(isMoving);
 
             if (_freeApplyGravity)
             {
@@ -271,7 +304,7 @@ namespace Character.Runtime
 
             charController.Move(horizontalMove + verticalVelocity * Time.deltaTime);
         }
-        
+
         public void Jump()
         {
             PlayerPowers powers = Object.FindFirstObjectByType<PlayerPowers>();
@@ -279,7 +312,8 @@ namespace Character.Runtime
             if (charController.isGrounded)
             {
                 verticalVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-                isGliding = false;
+                isGliding  = false;
+                _isLanding = false;
             }
             else if (powers != null && powers.hasGlideFeather)
             {
@@ -304,7 +338,7 @@ namespace Character.Runtime
             if (isGliding && verticalVelocity.y < glideGravity)
                 verticalVelocity.y = glideGravity;
         }
-        
+
         public void SwitchSpline(SplineContainer newSpline)
         {
             if (newSpline == null || activeSpline == newSpline) return;
@@ -325,7 +359,7 @@ namespace Character.Runtime
 
             Debug.Log($"Switch fluide sur {newSpline.name}");
         }
-        
+
         public void SetCheckpoint(Vector3 pos, SplineContainer spline, float distance)
         {
             lastCheckpointPos      = pos;
@@ -344,11 +378,16 @@ namespace Character.Runtime
 
             MovementMode = PlayerMovementMode.Spline;
 
+            // Réinitialise les états aériens
+            _isLanding    = false;
+            _landingTimer = 0f;
+            _wasGrounded  = true;
+
             charController.enabled = false;
             transform.position = lastCheckpointPos;
             charController.enabled = true;
         }
-        
+
         public void TriggerWind(float strength, float duration)
         {
             StartCoroutine(WindCoroutine(strength, duration));
