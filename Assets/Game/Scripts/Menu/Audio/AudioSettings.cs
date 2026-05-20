@@ -1,16 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class AudioSettings : MonoBehaviour
 {
     private static readonly string BackgroundPrefs = "BackgroundPrefs";
     private static readonly string SoundEffectsPrefs = "SoundEffectsPrefs";
-    
-    [SerializeField] private float backGroundVolume,  soundEffectVolume;
-    
-    [SerializeField] private AudioSource backgroundAudio;
-    [SerializeField] private AudioSource [] soundEffectAudio;
-    
+
+    [SerializeField] private float backGroundVolume, soundEffectVolume;
+
+    [Header("Audio Mixer")]
+    [SerializeField] private AudioMixer audioMixer;
+
     void Awake()
     {
         ContinueSettings();
@@ -20,12 +20,15 @@ public class AudioSettings : MonoBehaviour
     {
         backGroundVolume = PlayerPrefs.GetFloat(BackgroundPrefs);
         soundEffectVolume = PlayerPrefs.GetFloat(SoundEffectsPrefs);
-        
-        backgroundAudio.volume = backGroundVolume;
 
-        for (int i = 0; i < soundEffectAudio.Length; i++)
-        {
-            soundEffectAudio[i].volume = soundEffectVolume;
-        }
+        // MUSIC
+        float musicVolume = backGroundVolume <= 0.0001f ? -80f : Mathf.Log10(backGroundVolume) * 20;
+
+        audioMixer.SetFloat("MusicVolume", musicVolume);
+
+        // SFX
+        float sfxVolume = soundEffectVolume <= 0.0001f ? -80f : Mathf.Log10(soundEffectVolume) * 20;
+
+        audioMixer.SetFloat("SFXVolume", sfxVolume);
     }
 }
