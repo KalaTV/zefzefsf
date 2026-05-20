@@ -33,6 +33,10 @@ namespace Character.Runtime
         private PlayerAttachmentManager attachmentManager;
         private SpriteRenderer spriteRenderer;
         private CharacterController charController;
+        private Animator animator;
+
+        // Paramètre Animator pour l'animation de marche
+        private static readonly int IsWalking = Animator.StringToHash("isWalking");
         
         [Header("Movement Settings")]
         public float speed = 5f;
@@ -80,6 +84,7 @@ namespace Character.Runtime
             charController    = GetComponent<CharacterController>();
             attachmentManager = GetComponent<PlayerAttachmentManager>();
             spriteRenderer    = GetComponentInChildren<SpriteRenderer>();
+            animator          = GetComponentInChildren<Animator>();
 
             if (activeSpline != null)
             {
@@ -128,6 +133,15 @@ namespace Character.Runtime
                     break;
             }
         }
+
+        /// <summary>
+        /// Met à jour le paramètre "isWalking" de l'Animator selon que le personnage bouge ou non.
+        /// </summary>
+        private void UpdateWalkAnimation(bool isMoving)
+        {
+            if (animator != null)
+                animator.SetBool(IsWalking, isMoving);
+        }
         
         private void HandleSplineMovement()
         {
@@ -171,6 +185,10 @@ namespace Character.Runtime
 
             ApplyGravity();
             charController.Move(horizontalMove + (verticalVelocity * Time.deltaTime));
+
+            // Animation de marche : active si le joueur appuie et est au sol
+            bool isMoving = Mathf.Abs(combinedInput) > 0.1f && charController.isGrounded;
+            UpdateWalkAnimation(isMoving);
 
             if (Mathf.Abs(combinedInput) > 0.1f && spriteRenderer != null)
                 spriteRenderer.flipX = (combinedInput < 0f);
@@ -239,6 +257,10 @@ namespace Character.Runtime
                     spriteRenderer.flipX = (input.x < 0f);
             }
             
+            // Animation de marche en mode libre : active si le joueur bouge et est au sol
+            bool isMoving = moveDir.sqrMagnitude > 0.01f && charController.isGrounded;
+            UpdateWalkAnimation(isMoving);
+
             if (_freeApplyGravity)
             {
                 if (charController.isGrounded && verticalVelocity.y < 0)
