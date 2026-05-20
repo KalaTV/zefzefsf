@@ -1,0 +1,177 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1579112315215237568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5063742985798765688}
+  m_Layer: 0
+  m_Name: Wings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5063742985798765688
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579112315215237568}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3217263405057508472}
+  - {fileID: 3900968840240209156}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &3111069766134817683
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5063742985798765688}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.30973816
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.47907382
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.8355865
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9993084
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.0371855
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -4.262
+      objectReference: {fileID: 0}
+    - target: {fileID: 64039825496654726, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 67261b8f7bc49584c90821bebaf52897, type: 2}
+    - target: {fileID: 919132149155446097, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_Name
+      value: Wings solo bon cote
+      objectReference: {fileID: 0}
+    - target: {fileID: 2661215666156734702, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 67261b8f7bc49584c90821bebaf52897, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: -352389591414561481, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+--- !u!4 &3217263405057508472 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+  m_PrefabInstance: {fileID: 3111069766134817683}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3578601388006963951
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5063742985798765688}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.28735352
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.4901822
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.8440571
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.014263824
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.02728222
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.9995206
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.003281973
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0.331
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 178.356
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -3.132
+      objectReference: {fileID: 0}
+    - target: {fileID: 64039825496654726, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 67261b8f7bc49584c90821bebaf52897, type: 2}
+    - target: {fileID: 919132149155446097, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: m_Name
+      value: Wings solo bon cote (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2661215666156734702, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 67261b8f7bc49584c90821bebaf52897, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: -352389591414561481, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+--- !u!4 &3900968840240209156 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9d32ab2c1bd67f3408448de104f16d60, type: 3}
+  m_PrefabInstance: {fileID: 3578601388006963951}
+  m_PrefabAsset: {fileID: 0}

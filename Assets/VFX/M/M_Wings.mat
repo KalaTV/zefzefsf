@@ -43,15 +43,17 @@ Material:
     m_Ints: []
     m_Floats:
     - _DissolveAmount: -0.4
-    - _DissolveScale: 7
+    - _DissolveAngle: 12
+    - _DissolveScale: 8.07
     - _DistorsionAmount: 0.2
-    - _DistorsionScale: 419.8
+    - _DistorsionScale: 9.63
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
     - _Color: {r: 2, g: 0.6518968, b: 0.086274505, a: 1}
     - _DissolveSpeed: {r: 0, g: 112.31, b: 0, a: 0}
-    - _DistorsionSpeed: {r: 0, g: -458.6, b: 0, a: 0}
+    - _DissolveSpread: {r: -1, g: 12, b: 0, a: 0}
+    - _DistorsionSpeed: {r: 10.26, g: -458.6, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &240922268310681205
