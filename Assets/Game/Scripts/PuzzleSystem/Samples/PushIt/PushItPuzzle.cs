@@ -43,13 +43,11 @@ namespace PuzzleSystem
             foreach (var debris in debrisList)
             {
                 debris.OnCleared += HandleDebrisCleared;
-                debris.StartShaking();
             }
 
             foreach (var crank in crankList)
-                crank.StartShaking();
-
-            faceRotation?.SetShaking(true);
+               
+            
 
             Debug.Log($"[PushItPuzzle] Enter — {debrisList.Count} débris à pousser.");
         }
@@ -82,7 +80,6 @@ namespace PuzzleSystem
 
         private IEnumerator ResolvePuzzle()
         {
-            faceRotation?.SetShaking(false);
 
             if (faceRotation != null)
                 yield return StartCoroutine(faceRotation.PlayOpenAnimation());

@@ -6,54 +6,49 @@ namespace PuzzleSystem
     [RequireComponent(typeof(Rigidbody))]
     public class Debris : MonoBehaviour
     {
-        [Header("Feedback - tremblement")]
-        [SerializeField] private float shakeIntensity = 0.03f;
-        [SerializeField] private float shakeSpeed     = 8f;
-
         public event Action<Debris> OnCleared;
 
         private Vector3    _originPos;
         private bool       _isCleared = false;
         private bool       _shaking   = false;
         private Rigidbody  _rb;
-        
+        private Vector3 _originWorldPos;
+        private float _pushThreshold = 0.5f;
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
             _rb.isKinematic = true;        
             _originPos = transform.localPosition;
+            _originWorldPos = transform.position;
         }
 
         private void Update()
         {
-            if (_shaking && !_isCleared)
-                transform.localPosition = _originPos + (Vector3)(UnityEngine.Random.insideUnitCircle * shakeIntensity)
-                                                     * Mathf.Sin(Time.time * shakeSpeed);
+            if (!_isCleared && !_rb.isKinematic)
+            {
+                float moved = Vector3.Distance(transform.position, _originWorldPos);
+                if (moved >= _pushThreshold)
+                    Clear();
+            }
         }
         
-
-        public void StartShaking() => _shaking = true;
-        public void StopShaking()
-        {
-            _shaking = false;
-            transform.localPosition = _originPos;
-        }
+        
         
         private void OnTriggerExit(Collider other)
         {
             if (_isCleared) return;
             if (!other.CompareTag("Player")) return;
 
-            Clear();
+            // On libère juste la physique, pas encore Clear()
+            _rb.isKinematic = false;
         }
         
         public void Clear()
         {
             if (_isCleared) return;
             _isCleared = true;
-
-            StopShaking();
+            
             _rb.isKinematic = false;          
 
             OnCleared?.Invoke(this);

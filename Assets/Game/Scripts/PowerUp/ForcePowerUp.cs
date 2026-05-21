@@ -11,15 +11,28 @@ namespace FeatherCollectibleSystem.Runtime
         [Header("Configuration")]
         [SerializeField] private float maxReachDistance = 3.5f; 
         [SerializeField] private GameObject pickupEffect;
-        
         public void OnPointerClick(PointerEventData eventData)
         {
+            OnClick(); 
+        }
+        public void OnClick()
+        {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player == null) return;
-            
+            if (player == null)
+            {
+                Debug.LogError("Player introuvable ! Vérifie le tag 'Player'");
+                return;
+            }
+            Debug.Log("Player trouvé : " + player.name);
+
             PlayerPushPullController module = player.GetComponent<PlayerPushPullController>();
-            
+            if (module == null)
+            {
+                Debug.LogError("PlayerPushPullController introuvable sur le Player !");
+            }
+
             float distance = Vector3.Distance(player.transform.position, transform.position);
+            Debug.Log($"Distance : {distance} / Max : {maxReachDistance}");
 
             if (distance <= maxReachDistance)
             {

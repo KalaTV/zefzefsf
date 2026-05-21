@@ -9,20 +9,17 @@ namespace PuzzleSystem.Samples
         [SerializeField] private float maxReachDistance = 4f;
 
         private WeightObject carriedObject;
-
-        // Cette fonction sera appelée par l'EventTrigger sur les objets
+        
         public void OnObjectClicked(GameObject clickedObject)
         {
             float distance = Vector3.Distance(transform.position, clickedObject.transform.position);
-        
-            // Sécurité : on ne peut pas interagir si on est trop loin
+            
             if (distance > maxReachDistance)
             {
                 Debug.Log("Trop loin pour interagir !");
                 return;
             }
-
-            // CAS 1 : On porte déjà un objet et on clique sur une ScalePlate
+            
             ScalePlate plate = clickedObject.GetComponent<ScalePlate>();
             if (carriedObject != null && plate != null)
             {
@@ -47,12 +44,13 @@ namespace PuzzleSystem.Samples
 
         private void DropObjectOnPlate(ScalePlate plate)
         {
-            carriedObject.Drop();
-        
-            // Positionnement au-dessus du plateau
+            // 1. Positionner D'ABORD
             Vector3 dropPos = plate.transform.position;
-            dropPos.y += 1.2f; 
+            dropPos.y += 1.2f;
             carriedObject.transform.position = dropPos;
+
+            // 2. Ensuite relâcher la physique
+            carriedObject.Drop();
 
             carriedObject = null;
         }
