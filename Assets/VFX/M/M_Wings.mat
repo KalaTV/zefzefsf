@@ -47,6 +47,7 @@ Material:
     - _DissolveScale: 8.07
     - _DistorsionAmount: 0.2
     - _DistorsionScale: 9.63
+    - _FlapSpeed: 3
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
@@ -54,6 +55,8 @@ Material:
     - _DissolveSpeed: {r: 0, g: 112.31, b: 0, a: 0}
     - _DissolveSpread: {r: -1, g: 12, b: 0, a: 0}
     - _DistorsionSpeed: {r: 10.26, g: -458.6, b: 0, a: 0}
+    - _GlowUp: {r: 1, g: -0.24, b: 0.95, a: 0}
+    - _GlowUpAxis: {r: 1, g: 1, b: 2, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &240922268310681205
