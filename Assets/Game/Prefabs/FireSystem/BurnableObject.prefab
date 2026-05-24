@@ -128,6 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FeatherCollectibleSystem.Runtime::FeatherSystem.Runtime.Interactables.BurnableObject
   burnSpeed: 1
+  fireVfxPrefab: {fileID: 6658990171005240899, guid: b017ee3827d8bef4a966ce6111efbeda, type: 3}
+  vfxTravelDuration: 0.3
 --- !u!114 &1580021061560981453
 MonoBehaviour:
   m_ObjectHideFlags: 0
