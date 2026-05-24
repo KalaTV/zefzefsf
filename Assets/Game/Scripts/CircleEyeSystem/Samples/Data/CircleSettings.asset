@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac7d5f9ff93da3d40add75bb7d9dfaf2, type: 3}
   m_Name: CircleSettings
   m_EditorClassIdentifier: CircleEyeSystem.Runtime::CircleSettings
-  moveSpeed: 2
-  wanderRadius: 21.25
-  detectionRadius: 3
+  moveSpeed: 3
+  wanderRadius: 62.6
+  detectionRadius: 2.58
   playerLayer:
     serializedVersion: 2
     m_Bits: 256
