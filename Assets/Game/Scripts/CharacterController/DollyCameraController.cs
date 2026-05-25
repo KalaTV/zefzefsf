@@ -76,6 +76,7 @@ namespace Character.Runtime
 
             Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, desiredPosition, ref _currentVelocity, smoothSpeed);
             transform.position = smoothedPosition;
+            transform.LookAt(target.position + Vector3.up * 1.5f);
         }
     }
 }

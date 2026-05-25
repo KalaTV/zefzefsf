@@ -186,47 +186,59 @@ namespace Character.Runtime
         }
 
         private void ApplyMovementOnSpline(Vector2 input)
-        {
-            if (activeSpline == null || splineLength <= 0.1f) return;
+{
+    
+    if (activeSpline == null || splineLength <= 0.1f) return;
 
-            float t = currentDistance / splineLength;
+    float t = currentDistance / splineLength;
 
-            Vector3 targetSplineWorldPos = activeSpline.EvaluatePosition(t);
-            Vector3 tangent = activeSpline.EvaluateTangent(t);
+    Vector3 targetSplineWorldPos = activeSpline.EvaluatePosition(t);
+    Vector3 tangent = activeSpline.EvaluateTangent(t);
 
-            Vector2 splineDir = new Vector2(tangent.x, tangent.z).normalized;
-            float combinedInput = Vector2.Dot(input, splineDir);
+    // Input world space via caméra
+    Camera cam = Camera.main;
+    Vector3 camRight   = cam.transform.right;
+    Vector3 camForward = cam.transform.forward;
+    camRight.y   = 0f; camRight.Normalize();
+    camForward.y = 0f; camForward.Normalize();
 
-            Vector2 perpendicularDir = new Vector2(-splineDir.y, splineDir.x);
-            SideInput = Vector2.Dot(input, perpendicularDir);
+    Vector3 worldInput = camRight * input.x + camForward * input.y;
 
-            float weightMultiplier = (attachmentManager != null)
-                ? attachmentManager.currentSpeed / attachmentManager.baseSpeed
-                : 1f;
-            float mult = isHunted ? runMultiplier : 1f;
-            float targetSpeed = combinedInput * speed * mult * weightMultiplier;
+    // Projection sur la tangente de la spline
+    Vector3 splineDir3D = new Vector3(tangent.x, 0f, tangent.z).normalized;
+    float combinedInput = Vector3.Dot(worldInput, splineDir3D);
 
-            currentSpeedValue = Mathf.Lerp(currentSpeedValue, targetSpeed, acceleration * Time.deltaTime);
+    // SideInput pour les autres systèmes
+    Vector3 perp = Vector3.Cross(Vector3.up, splineDir3D);
+    SideInput = Vector3.Dot(worldInput, perp);
 
-            float finalMove = (currentSpeedValue + windForce) * Time.deltaTime;
-            currentDistance += finalMove;
-            currentDistance = Mathf.Clamp(currentDistance, 0f, splineLength);
+    float weightMultiplier = (attachmentManager != null)
+        ? attachmentManager.currentSpeed / attachmentManager.baseSpeed
+        : 1f;
+    float mult = isHunted ? runMultiplier : 1f;
+    float targetSpeed = combinedInput * speed * mult * weightMultiplier;
 
-            transitionOffset = Vector3.Lerp(transitionOffset, Vector3.zero, splineSwitchSpeed * Time.deltaTime);
+    currentSpeedValue = Mathf.Lerp(currentSpeedValue, targetSpeed, acceleration * Time.deltaTime);
 
-            Vector3 finalTargetPos = targetSplineWorldPos + transitionOffset;
-            Vector3 horizontalMove = finalTargetPos - transform.position;
-            horizontalMove.y = 0;
+    float finalMove = (currentSpeedValue + windForce) * Time.deltaTime;
+    currentDistance += finalMove;
+    currentDistance = Mathf.Clamp(currentDistance, 0f, splineLength);
 
-            ApplyGravity();
-            charController.Move(horizontalMove + (verticalVelocity * Time.deltaTime));
+    transitionOffset = Vector3.Lerp(transitionOffset, Vector3.zero, splineSwitchSpeed * Time.deltaTime);
 
-            bool isMoving = Mathf.Abs(combinedInput) > 0.1f;
-            UpdateAirborneAnimation(isMoving);
+    Vector3 finalTargetPos = targetSplineWorldPos + transitionOffset;
+    Vector3 horizontalMove = finalTargetPos - transform.position;
+    horizontalMove.y = 0;
 
-            if (Mathf.Abs(combinedInput) > 0.1f && spriteRenderer != null)
-                spriteRenderer.flipX = (combinedInput < 0f);
-        }
+    ApplyGravity();
+    charController.Move(horizontalMove + (verticalVelocity * Time.deltaTime));
+
+    bool isMoving = Mathf.Abs(combinedInput) > 0.1f;
+    UpdateAirborneAnimation(isMoving);
+
+    if (Mathf.Abs(combinedInput) > 0.1f && spriteRenderer != null)
+        spriteRenderer.flipX = (combinedInput < 0f);
+}
 
         public void EnterFreeMovement(float moveSpeed, float rotSpeed, bool applyGravity)
         {
@@ -405,6 +417,18 @@ namespace Character.Runtime
             }
             windForce    = 0f;
             isWindActive = false;
+        }
+        void LateUpdate()
+        {
+            if (spriteRenderer == null) return;
+
+            Camera cam = Camera.main;
+            if (cam == null) return;
+
+            Vector3 lookDir = transform.position - cam.transform.position;
+            lookDir.y = 0f;
+            if (lookDir.sqrMagnitude > 0.001f)
+                spriteRenderer.transform.rotation = Quaternion.LookRotation(lookDir);
         }
     }
 }
