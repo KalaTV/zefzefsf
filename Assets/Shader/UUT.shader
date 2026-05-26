@@ -87,10 +87,8 @@ Shader "Custom/ULTF"
 
             float _Ambient;
             float _BackLight;
-
-            // =========================
-            // ROTATION MATRIX
-            // =========================
+            
+            // ROTATION
 
             float3 RotateAroundX(float3 pos, float angle)
             {
@@ -132,35 +130,27 @@ Shader "Custom/ULTF"
 
                 float time =
                     _Time.y * _WindSpeed;
-
-                // =========================
+                
                 // BASE MASK
-                // base fixe / haut flexible
-                // =========================
+                // base fixe / haut mouvant
 
                 float mask =
                     pow(IN.uv.y, 2.0);
-
-                // =========================
+                
                 // UNIQUE RANDOM
-                // =========================
 
                 float rnd =
                     hash(pos.xy);
-
-                // =========================
+                
                 // MAIN WIND
-                // =========================
 
                 float mainWind =
                     sin(
                         time +
                         rnd * 10
                     ) * _WindStrength;
-
-                // =========================
+                
                 // FLUTTER
-                // =========================
 
                 float flutter =
                     sin(
@@ -169,19 +159,17 @@ Shader "Custom/ULTF"
                         rnd * 5
                     ) * _LeafFlutter;
 
-                // =========================
+                
                 // TWIST
-                // =========================
+                
 
                 float twist =
                     cos(
                         time * 3 +
                         rnd * 8
                     ) * _LeafTwist;
-
-                // =========================
+                
                 // BEND
-                // =========================
 
                 float bend =
                     mainWind *
