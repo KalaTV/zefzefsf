@@ -36,8 +36,8 @@ Material:
     - _DistortionStrength: 0.136
     - _EmissionStrength: 0.2
     - _EmissiveSoftness: 1
-    - _FeatherFlutter: 0.1
-    - _FeatherWave: 0.23
+    - _FeatherFlutter: 0.36
+    - _FeatherWave: 0.88
     - _FlameIntensity: 0
     - _FlameOpacity: 0.7
     - _FlameSoftness: 5
@@ -48,8 +48,8 @@ Material:
     - _Smoothness: 1
     - _TipMotion: 0.96
     - _WingBend: 0.52
-    - _WingFlapAmplitude: 0.7
-    - _WingFlapSpeed: 0.76
+    - _WingFlapAmplitude: 0.29
+    - _WingFlapSpeed: 2.84
     m_Colors:
     - _Color: {r: 0.6194855, g: 0.6226415, b: 0.30427197, a: 1}
     - _EdgeColor: {r: 1, g: 0.40588298, b: 0.111320674, a: 1}
