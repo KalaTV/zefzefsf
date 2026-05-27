@@ -136,10 +136,10 @@ PlayerSettings:
   switchMaxWorkerMultiple: 8
   switchNVNGraphicsFirmwareMemory: 32
   switchGraphicsJobsSyncAfterKick: 1
-  vulkanNumSwapchainBuffers: 3
+  vulkanNumSwapchainBuffers: 2
   vulkanEnableSetSRGBWrite: 0
   vulkanEnablePreTransform: 1
-  vulkanEnableLateAcquireNextImage: 0
+  vulkanEnableLateAcquireNextImage: 1
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
