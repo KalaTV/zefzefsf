@@ -5,23 +5,73 @@ Shader "Custom/ULTF"
         _MainTex ("Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
 
+        // =========================
+        // CUTOUT
+        // =========================
+
         _Cutoff ("Cutoff", Range(0,1)) = 0.35
-        _EdgeSmoothness ("Edge Smoothness", Range(0.001,0.1)) = 0.02
 
+        _EdgeSmoothness
+        (
+            "Edge Smoothness",
+            Range(0.001,0.1)
+        ) = 0.02
+
+        // =========================
         // WIND
-        _WindStrength ("Wind Strength", Range(0,5)) = 1
-        _WindSpeed ("Wind Speed", Range(0,10)) = 2
+        // =========================
 
-        _LeafFlutter ("Leaf Flutter", Range(0,5)) = 1
-        _LeafTwist ("Leaf Twist", Range(0,5)) = 1
+        _WindStrength
+        (
+            "Wind Strength",
+            Range(0,5)
+        ) = 1
 
-        _BendStrength ("Bend Strength", Range(0,5)) = 1
+        _WindSpeed
+        (
+            "Wind Speed",
+            Range(0,10)
+        ) = 2
 
-        _NoiseScale ("Noise Scale", Range(0,10)) = 2
+        _LeafFlutter
+        (
+            "Leaf Flutter",
+            Range(0,5)
+        ) = 1
 
-        // LIGHT
-        _Ambient ("Ambient", Range(0,2)) = 0.5
-        _BackLight ("BackLight", Range(0,5)) = 1.5
+        _LeafTwist
+        (
+            "Leaf Twist",
+            Range(0,5)
+        ) = 1
+
+        _BendStrength
+        (
+            "Bend Strength",
+            Range(0,5)
+        ) = 1
+
+        _NoiseScale
+        (
+            "Noise Scale",
+            Range(0,10)
+        ) = 2
+
+        // =========================
+        // LIGHTING
+        // =========================
+
+        _Ambient
+        (
+            "Ambient",
+            Range(0,2)
+        ) = 0.5
+
+        _BackLight
+        (
+            "BackLight",
+            Range(0,5)
+        ) = 1.5
     }
 
     SubShader
@@ -41,15 +91,37 @@ Shader "Custom/ULTF"
         {
             Name "ForwardLit"
 
-            Tags { "LightMode"="UniversalForward" }
+            Tags
+            {
+                "LightMode"="UniversalForward"
+            }
 
             HLSLPROGRAM
 
             #pragma vertex vert
             #pragma fragment frag
 
+            // =========================
+            // FOG
+            // =========================
+
+            #pragma multi_compile_fog
+
+            // =========================
+            // SHADOWS
+            // =========================
+
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _SHADOWS_SOFT
+
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+
+            // =========================
+            // STRUCTS
+            // =========================
 
             struct Attributes
             {
@@ -61,150 +133,235 @@ Shader "Custom/ULTF"
             struct Varyings
             {
                 float4 positionCS : SV_POSITION;
+
                 float2 uv : TEXCOORD0;
+
                 float3 normalWS : TEXCOORD1;
+
                 float3 positionWS : TEXCOORD2;
+
+                float fogFactor : TEXCOORD3;
             };
 
-            TEXTURE2D(_MainTex);
-            SAMPLER(sampler_MainTex);
+            // =========================
+            // TEXTURES
+            // =========================
+
+            sampler2D _MainTex;
 
             float4 _MainTex_ST;
+
+            // =========================
+            // MATERIAL
+            // =========================
 
             half4 _Color;
 
             float _Cutoff;
             float _EdgeSmoothness;
 
+            // =========================
+            // WIND
+            // =========================
+
             float _WindStrength;
             float _WindSpeed;
 
             float _LeafFlutter;
             float _LeafTwist;
+
             float _BendStrength;
 
             float _NoiseScale;
 
+            // =========================
+            // LIGHTING
+            // =========================
+
             float _Ambient;
             float _BackLight;
-            
-            // ROTATION
 
-            float3 RotateAroundX(float3 pos, float angle)
+            // =========================
+            // ROTATIONS
+            // =========================
+
+            float3 RotateAroundX
+            (
+                float3 pos,
+                float angle
+            )
             {
                 float s = sin(angle);
                 float c = cos(angle);
 
-                return float3(
+                return float3
+                (
                     pos.x,
                     pos.y * c - pos.z * s,
                     pos.y * s + pos.z * c
                 );
             }
 
-            float3 RotateAroundY(float3 pos, float angle)
+            float3 RotateAroundY
+            (
+                float3 pos,
+                float angle
+            )
             {
                 float s = sin(angle);
                 float c = cos(angle);
 
-                return float3(
+                return float3
+                (
                     pos.x * c + pos.z * s,
                     pos.y,
                     -pos.x * s + pos.z * c
                 );
             }
 
+            // =========================
+            // HASH
+            // =========================
+
             float hash(float2 p)
             {
-                return frac(
+                return frac
+                (
                     sin(dot(p,float2(127.1,311.7)))
                     * 43758.5453
                 );
             }
 
+            // =========================
+            // VERTEX
+            // =========================
+
             Varyings vert(Attributes IN)
             {
                 Varyings OUT;
 
-                float3 pos = IN.positionOS.xyz;
+                float3 pos =
+                    IN.positionOS.xyz;
 
                 float time =
                     _Time.y * _WindSpeed;
-                
+
+                // =========================
                 // BASE MASK
-                // base fixe / haut mouvant
+                // =========================
 
                 float mask =
                     pow(IN.uv.y, 2.0);
-                
-                // UNIQUE RANDOM
+
+                // =========================
+                // RANDOM
+                // =========================
 
                 float rnd =
                     hash(pos.xy);
-                
+
+                // =========================
                 // MAIN WIND
+                // =========================
 
                 float mainWind =
-                    sin(
+                    sin
+                    (
                         time +
                         rnd * 10
-                    ) * _WindStrength;
-                
+                    )
+                    * _WindStrength;
+
+                // =========================
                 // FLUTTER
+                // =========================
 
                 float flutter =
-                    sin(
+                    sin
+                    (
                         time * 6 +
                         pos.x * 12 +
                         rnd * 5
-                    ) * _LeafFlutter;
+                    )
+                    * _LeafFlutter;
 
-                
+                // =========================
                 // TWIST
-                
+                // =========================
 
                 float twist =
-                    cos(
+                    cos
+                    (
                         time * 3 +
                         rnd * 8
-                    ) * _LeafTwist;
-                
+                    )
+                    * _LeafTwist;
+
+                // =========================
                 // BEND
+                // =========================
 
                 float bend =
                     mainWind *
                     _BendStrength *
                     mask;
 
-                // pivot base
+                // =========================
+                // PIVOT
+                // =========================
+
                 pos.y -= 0.5;
 
-                // bend
+                // =========================
+                // APPLY BEND
+                // =========================
+
                 pos =
-                    RotateAroundX(
+                    RotateAroundX
+                    (
                         pos,
                         bend * 0.25
                     );
 
-                // twist
+                // =========================
+                // APPLY TWIST
+                // =========================
+
                 pos =
-                    RotateAroundY(
+                    RotateAroundY
+                    (
                         pos,
                         twist * 0.1 * mask
                     );
 
-                // flutter
-                pos.x += flutter * 0.02 * mask;
-                pos.z += flutter * 0.01 * mask;
+                // =========================
+                // FLUTTER
+                // =========================
 
-                // remettre pivot
+                pos.x +=
+                    flutter * 0.02 * mask;
+
+                pos.z +=
+                    flutter * 0.01 * mask;
+
+                // =========================
+                // RESET PIVOT
+                // =========================
+
                 pos.y += 0.5;
+
+                // =========================
+                // POSITION
+                // =========================
 
                 VertexPositionInputs posInputs =
                     GetVertexPositionInputs(pos);
 
                 VertexNormalInputs normalInputs =
-                    GetVertexNormalInputs(IN.normalOS);
+                    GetVertexNormalInputs
+                    (
+                        IN.normalOS
+                    );
 
                 OUT.positionCS =
                     posInputs.positionCS;
@@ -215,79 +372,180 @@ Shader "Custom/ULTF"
                 OUT.normalWS =
                     normalInputs.normalWS;
 
+                // =========================
+                // UV FIX
+                // =========================
+
                 OUT.uv =
-                    TRANSFORM_TEX(IN.uv, _MainTex);
+                    IN.uv * _MainTex_ST.xy
+                    + _MainTex_ST.zw;
+
+                // =========================
+                // FOG
+                // =========================
+
+                OUT.fogFactor =
+                    ComputeFogFactor
+                    (
+                        posInputs.positionCS.z
+                    );
 
                 return OUT;
             }
 
-            half4 frag(Varyings IN) : SV_Target
+            // =========================
+            // FRAGMENT
+            // =========================
+
+            half4 frag(Varyings IN)
+                : SV_Target
             {
+                // =========================
+                // TEXTURE SAMPLE FIX
+                // =========================
+
                 half4 tex =
-                    SAMPLE_TEXTURE2D(
+                    tex2D
+                    (
                         _MainTex,
-                        sampler_MainTex,
                         IN.uv
                     );
 
-                half4 col = tex * _Color;
+                half4 col =
+                    tex * _Color;
 
+                // =========================
                 // SOFT CUTOUT
+                // =========================
+
                 float alpha =
-                    smoothstep(
-                        _Cutoff - _EdgeSmoothness,
-                        _Cutoff + _EdgeSmoothness,
+                    smoothstep
+                    (
+                        _Cutoff
+                            - _EdgeSmoothness,
+
+                        _Cutoff
+                            + _EdgeSmoothness,
+
                         col.a
                     );
 
                 clip(alpha - 0.01);
 
-                // LIGHTING
+                // =========================
+                // SHADOWS
+                // =========================
+
+                float4 shadowCoord =
+                    TransformWorldToShadowCoord
+                    (
+                        IN.positionWS
+                    );
 
                 Light light =
-                    GetMainLight();
+                    GetMainLight
+                    (
+                        shadowCoord
+                    );
+
+                // =========================
+                // NORMALS
+                // =========================
 
                 float3 normal =
                     normalize(IN.normalWS);
 
                 // double sided foliage
                 normal =
-                    faceforward(
+                    faceforward
+                    (
                         normal,
-                        -normalize(_WorldSpaceCameraPos - IN.positionWS),
+
+                        -normalize
+                        (
+                            _WorldSpaceCameraPos
+                            - IN.positionWS
+                        ),
+
                         normal
                     );
 
+                // =========================
+                // LIGHTING
+                // =========================
+
                 float NdotL =
-                    saturate(
-                        dot(normal, light.direction)
+                    saturate
+                    (
+                        dot
+                        (
+                            normal,
+                            light.direction
+                        )
                     );
 
+                // softer foliage light
                 NdotL =
                     NdotL * 0.5 + 0.5;
 
                 float3 diffuse =
                     col.rgb *
                     light.color *
-                    NdotL;
+                    NdotL *
+                    light.shadowAttenuation;
+
+                // =========================
+                // BACKLIGHT
+                // =========================
 
                 float back =
-                    pow(
-                        saturate(
-                            dot(-normal, light.direction)
+                    pow
+                    (
+                        saturate
+                        (
+                            dot
+                            (
+                                -normal,
+                                light.direction
+                            )
                         ),
                         2
-                    ) * _BackLight;
+                    )
+                    * _BackLight;
+
+                // =========================
+                // AMBIENT
+                // =========================
 
                 float3 ambient =
-                    col.rgb * _Ambient;
+                    col.rgb *
+                    _Ambient;
+
+                // =========================
+                // FINAL COLOR
+                // =========================
 
                 float3 finalColor =
                     diffuse +
                     ambient +
                     back * col.rgb;
 
-                return half4(finalColor, alpha);
+                // =========================
+                // APPLY FOG
+                // =========================
+
+                finalColor =
+                    MixFog
+                    (
+                        finalColor,
+                        IN.fogFactor
+                    );
+
+                return half4
+                (
+                    finalColor,
+                    alpha
+                );
             }
 
             ENDHLSL
