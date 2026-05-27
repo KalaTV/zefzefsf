@@ -29,27 +29,27 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Ambient: 0.26
+    - _Ambient: 0.405
     - _DissolveAmount: 0
     - _DissolveSoftness: 0.001
-    - _DistortionSpeed: 1.06
-    - _DistortionStrength: 0.136
-    - _EmissionStrength: 0.2
+    - _DistortionSpeed: 2.04
+    - _DistortionStrength: 0.352
+    - _EmissionStrength: 0
     - _EmissiveSoftness: 1
-    - _FeatherFlutter: 0.36
-    - _FeatherWave: 0.88
-    - _FlameIntensity: 0
+    - _FeatherFlutter: 0.4
+    - _FeatherWave: 0
+    - _FlameIntensity: 2.82
     - _FlameOpacity: 0.7
     - _FlameSoftness: 5
     - _HorizontalFlap: 5
     - _HorizontalFlapSpeed: 10
-    - _NoiseScale: 19.7
-    - _NoiseSpeed: 2
+    - _NoiseScale: 20
+    - _NoiseSpeed: 2.12
     - _Smoothness: 1
-    - _TipMotion: 0.96
-    - _WingBend: 0.52
-    - _WingFlapAmplitude: 0.29
-    - _WingFlapSpeed: 2.84
+    - _TipMotion: 1
+    - _WingBend: 5
+    - _WingFlapAmplitude: 0.8
+    - _WingFlapSpeed: 1.91
     m_Colors:
     - _Color: {r: 0.6194855, g: 0.6226415, b: 0.30427197, a: 1}
     - _EdgeColor: {r: 1, g: 0.40588298, b: 0.111320674, a: 1}
