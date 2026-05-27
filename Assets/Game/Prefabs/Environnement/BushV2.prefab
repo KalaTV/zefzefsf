@@ -9,13 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2674784721882855089}
-  - component: {fileID: 1069994372348630764}
+  - component: {fileID: 1227375263099440754}
   m_Layer: 0
   m_Name: BushV2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2674784721882855089
 Transform:
@@ -30,10 +30,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1074742976347695074}
+  - {fileID: 5689914369242041455}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!205 &1069994372348630764
+--- !u!205 &1227375263099440754
 LODGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,26 +41,18 @@ LODGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6343065884679585929}
   serializedVersion: 2
-  m_LocalReferencePoint: {x: -0.23777282, y: -0.36050558, z: 0.7881324}
-  m_Size: 2.8832536
-  m_FadeMode: 0
-  m_AnimateCrossFading: 0
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 1
+  m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.6
+  - screenRelativeHeight: 0.109864585
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 2207166059856993421}
-  - screenRelativeHeight: 0.3
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2207166059856993421}
-  - screenRelativeHeight: 0.1
-    fadeTransitionWidth: 0
-    renderers:
-    - renderer: {fileID: 2207166059856993421}
+    - renderer: {fileID: 6826768896525072128}
   m_Enabled: 1
---- !u!1001 &675813136450813961
+--- !u!1001 &5295137522403076996
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -114,20 +106,24 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: d2dbd959774a5d7418ed71ca41edf746, type: 2}
     - target: {fileID: 919132149155446097, guid: a5a5d46d93b414b4785ff65084170cb4, type: 3}
       propertyPath: m_Name
-      value: 'Buisson claire plane variation '
+      value: Buisson claire plane variation  (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a5a5d46d93b414b4785ff65084170cb4, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5a5d46d93b414b4785ff65084170cb4, type: 3}
---- !u!4 &1074742976347695074 stripped
+--- !u!4 &5689914369242041455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a5a5d46d93b414b4785ff65084170cb4, type: 3}
-  m_PrefabInstance: {fileID: 675813136450813961}
+  m_PrefabInstance: {fileID: 5295137522403076996}
   m_PrefabAsset: {fileID: 0}
---- !u!23 &2207166059856993421 stripped
+--- !u!23 &6826768896525072128 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: a5a5d46d93b414b4785ff65084170cb4, type: 3}
-  m_PrefabInstance: {fileID: 675813136450813961}
+  m_PrefabInstance: {fileID: 5295137522403076996}
   m_PrefabAsset: {fileID: 0}

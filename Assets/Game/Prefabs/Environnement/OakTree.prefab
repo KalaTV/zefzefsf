@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3350076448594811600
 Transform:
@@ -113,6 +113,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tree
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cb2f61f003f412341a3b23b866680fe1, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -139,6 +143,10 @@ PrefabInstance:
     - target: {fileID: 3703999791084036598, guid: 2507d1296bade4849943c03ae26d28a2, type: 3}
       propertyPath: m_Name
       value: Arbre Plane tron
+      objectReference: {fileID: 0}
+    - target: {fileID: 3703999791084036598, guid: 2507d1296bade4849943c03ae26d28a2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 4047769061325486924, guid: 2507d1296bade4849943c03ae26d28a2, type: 3}
       propertyPath: m_LocalPosition.x

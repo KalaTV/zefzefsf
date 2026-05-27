@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5484464648892449029
 Transform:
@@ -41,8 +41,8 @@ LODGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2766910890405433211}
   serializedVersion: 2
-  m_LocalReferencePoint: {x: -3.8225129, y: 0.91848445, z: -15.958847}
-  m_Size: 2.8832536
+  m_LocalReferencePoint: {x: -0.038072884, y: 0.33941448, z: -0.043087363}
+  m_Size: 2.8832533
   m_FadeMode: 0
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
@@ -115,6 +115,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a5a5d46d93b414b4785ff65084170cb4, type: 3}
       propertyPath: m_Name
       value: 'Buisson claire plane variation '
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a5a5d46d93b414b4785ff65084170cb4, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

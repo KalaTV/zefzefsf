@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4810231357570046083
 Transform:
@@ -44,11 +44,11 @@ LODGroup:
   serializedVersion: 2
   m_LocalReferencePoint: {x: 0.35312557, y: 5.7465963, z: -0.0017004013}
   m_Size: 11.582193
-  m_FadeMode: 0
+  m_FadeMode: 1
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.94767594
+  - screenRelativeHeight: 0.65507764
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 2372519261278080635}
@@ -125,6 +125,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boulo plane tron tordu 2
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2a15f9c656478cc4eb4b797f8a3e772d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -191,6 +195,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 58aff686bfade8a459c22d105c548a0c, type: 3}
       propertyPath: m_Name
       value: Boulo plus Large blend
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 58aff686bfade8a459c22d105c548a0c, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
