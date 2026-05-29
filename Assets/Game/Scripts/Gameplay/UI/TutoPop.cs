@@ -1,17 +1,20 @@
-using System;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
 
 public class TutoPop : MonoBehaviour
 {
     [SerializeField] private GameObject panel;
-    
+
+    private bool hasBeenShown = false;
+
     public void ShowPopup()
     {
+        if (hasBeenShown)
+            return;
+
         if (GameObject.FindGameObjectWithTag("Player") != null)
         {
-            panel.gameObject.SetActive(true);
+            panel.SetActive(true);
+            hasBeenShown = true;
         }
     }
 
