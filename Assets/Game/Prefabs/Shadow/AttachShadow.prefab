@@ -275,7 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5ee73ae24754ad48d69c5aed086c03b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: EnemyAttachmentSystem.Runtime::EnemyAttachmentSystem.Runtime.AttachableEnemy
-  moveSpeed: 3
+  moveSpeed: 5
 --- !u!136 &6183704919077135530
 CapsuleCollider:
   m_ObjectHideFlags: 0

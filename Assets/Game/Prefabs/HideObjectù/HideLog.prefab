@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2279330440119372095
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5392573465075712176}
-  m_Layer: 0
-  m_Name: ExitPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5392573465075712176
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2279330440119372095}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1.23}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6921764382855243765}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7984316318747032070
 GameObject:
   m_ObjectHideFlags: 0
@@ -65,8 +34,7 @@ Transform:
   m_LocalPosition: {x: -0.38, y: 0.26, z: -0.61}
   m_LocalScale: {x: 1.3889, y: 2.0020719, z: 1.3889}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5392573465075712176}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90.205}
 --- !u!33 &8804092050639272731
@@ -190,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aea37fd37155e57439350efb654237e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: HideAndSeekSystem.Runtime::HideAndSeekSystem.Runtime.HidingSpot
-  exitPoint: {fileID: 5392573465075712176}
+  exitPoint: {fileID: 0}
   shadowManager: {fileID: 0}
 --- !u!136 &1906486691214848799
 CapsuleCollider:
