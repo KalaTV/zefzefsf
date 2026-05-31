@@ -6,7 +6,7 @@ namespace ColorSystem.Runtime
     {
         private GameObject player;
         private bool isPlayerInside = false;
-        private bool isCampFire = false;
+        public bool isCampFire = false;
         [SerializeField] GameColorManager gameColorManager;
 
         public void OnInteract()

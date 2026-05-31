@@ -47,15 +47,26 @@ namespace EnemyAttachmentSystem.Runtime
             }
         }
 
+        private Quaternion frozenRotation;
+
         private void GrabPoint(Transform attachmentPoint)
         {
             isAttached = true;
+            frozenRotation = transform.rotation; // Sauvegarde la rotation mondiale actuelle
+
             transform.SetParent(attachmentPoint);
-            transform.localPosition = Vector3.zero; 
-            transform.localRotation = Quaternion.identity; 
-            
+            transform.localPosition = Vector3.zero;
+
             Collider col = GetComponent<Collider>();
             if (col != null) col.enabled = false;
+        }
+
+        private void LateUpdate()
+        {
+            if (isAttached)
+            {
+                transform.rotation = frozenRotation; // Réapplique à chaque frame
+            }
         }
     }
 }
