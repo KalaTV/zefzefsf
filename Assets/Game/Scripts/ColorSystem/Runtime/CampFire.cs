@@ -4,41 +4,42 @@ namespace ColorSystem.Runtime
 {
     public class CampFire : MonoBehaviour
     {
-        private GameObject player;
         private bool isPlayerInside = false;
         public bool isCampFire = false;
-        [SerializeField] GameColorManager gameColorManager;
+
+        [SerializeField] private GameColorManager gameColorManager;
+        [SerializeField] private GameObject fireVFX;
 
         public void OnInteract()
         {
             if (isPlayerInside)
             {
-                Debug.Log("Allumé le feu");
                 isCampFire = true;
+                Debug.Log("Allumé le feu");
             }
         }
 
         private void Update()
         {
+            if (fireVFX != null)
+                fireVFX.SetActive(isCampFire);
+
             if (isCampFire && gameColorManager.currentSaturation < gameColorManager.maxSaturation)
                 gameColorManager.RestoreColor(5f);
         }
-        
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player"))
-            {
-                player = other.gameObject;
                 isPlayerInside = true;
-            }
         }
-        
+
         private void OnTriggerExit(Collider other)
         {
             if (other.CompareTag("Player"))
             {
                 isPlayerInside = false;
-                isCampFire = false;                                                                                                                  
+                isCampFire = false;
             }
         }
     }
