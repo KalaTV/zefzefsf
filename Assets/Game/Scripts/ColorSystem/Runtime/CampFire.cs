@@ -24,7 +24,7 @@ namespace ColorSystem.Runtime
             if (fireVFX != null)
                 fireVFX.SetActive(isCampFire);
 
-            if (isCampFire && gameColorManager.currentSaturation < gameColorManager.maxSaturation)
+            if (isCampFire && gameColorManager.currentSaturation < gameColorManager.maxSaturation && isPlayerInside)
                 gameColorManager.RestoreColor(5f);
         }
 
