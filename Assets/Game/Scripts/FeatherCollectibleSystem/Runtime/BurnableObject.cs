@@ -17,16 +17,20 @@ namespace FeatherSystem.Runtime.Interactables
         private GameObject player;
         private bool isPlayerInside = false;
         private bool isBurning = false;
-        private MeshRenderer meshRenderer;
         private Color originalColor;
         private float burnProgress = 0f;
 
+        private MeshRenderer[] meshRenderers;
+        private Color[] originalColors;
+
         private void Awake()
         {
-            meshRenderer = GetComponent<MeshRenderer>();
-            if (meshRenderer != null)
+            meshRenderers = GetComponentsInChildren<MeshRenderer>();
+            originalColors = new Color[meshRenderers.Length];
+    
+            for (int i = 0; i < meshRenderers.Length; i++)
             {
-                originalColor = meshRenderer.material.color;
+                originalColors[i] = meshRenderers[i].material.color;
             }
         }
 
@@ -90,22 +94,19 @@ namespace FeatherSystem.Runtime.Interactables
 
         private void Update()
         {
-            if (isBurning && meshRenderer != null)
-            {
-                burnProgress += burnSpeed * Time.deltaTime;
-                
-                Color targetColor = Color.Lerp(originalColor, Color.black, burnProgress);
-                
-                // Note: Pour que l'alpha (transparence) fonctionne, le Material de ton objet 
-                // doit être configuré sur "Transparent" (ou "Fade") dans Unity.
-                targetColor.a = 1f - burnProgress;
-                
-                meshRenderer.material.color = targetColor;
+            if (!isBurning) return;
 
-                if (burnProgress >= 1f)
-                {
-                    Destroy(gameObject);
-                }
+            burnProgress += burnSpeed * Time.deltaTime;
+            burnProgress = Mathf.Clamp01(burnProgress);
+
+            for (int i = 0; i < meshRenderers.Length; i++)
+            {
+                meshRenderers[i].material.color = Color.Lerp(originalColors[i], Color.black, burnProgress);
+            }
+
+            if (burnProgress >= 1f)
+            {
+                Destroy(gameObject);
             }
         }
 

@@ -9,7 +9,7 @@ namespace EnemyAttachmentSystem.Runtime
         [Header("Settings")] 
         [SerializeField] private List<Transform> attachmentPoints;
         private List<Transform> availablePoints;
-        public int currentAttachedCount { get; private set; }
+        public int currentAttachedCount { get; set; }
         
         
         [Header("Speed")]
