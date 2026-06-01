@@ -34,6 +34,9 @@ namespace Character.Runtime
         private CharacterController charController;
         private Animator animator;
 
+        [Header("Wings")]
+        [SerializeField] private GameObject wingsRight; // normal
+        [SerializeField] private GameObject wingsLeft;  // flippé
         // Paramètres Animator
         private static readonly int IsWalking = Animator.StringToHash("isWalking");
         private static readonly int IsJumping = Animator.StringToHash("isJumping");
@@ -103,6 +106,15 @@ namespace Character.Runtime
             }
         }
 
+        private void UpdateWings()
+        {
+            if (wingsRight == null || wingsLeft == null) return;
+
+            bool flipped = spriteRenderer != null && spriteRenderer.flipX;
+
+            wingsRight.SetActive(isGliding && !flipped);
+            wingsLeft.SetActive(isGliding && flipped);
+        }
         private void Start()
         {
             if (activeSpline != null)
@@ -238,6 +250,7 @@ namespace Character.Runtime
 
     if (Mathf.Abs(combinedInput) > 0.1f && spriteRenderer != null)
         spriteRenderer.flipX = (combinedInput < 0f);
+    UpdateWings();
 }
 
         public void EnterFreeMovement(float moveSpeed, float rotSpeed, bool applyGravity)
@@ -315,6 +328,7 @@ namespace Character.Runtime
             }
 
             charController.Move(horizontalMove + verticalVelocity * Time.deltaTime);
+            UpdateWings();
         }
 
         public void Jump()
@@ -333,6 +347,7 @@ namespace Character.Runtime
                 if (isGliding && verticalVelocity.y < 0)
                     verticalVelocity.y = -1f;
             }
+            UpdateWings();
         }
 
         private void ApplyGravity()
@@ -349,6 +364,7 @@ namespace Character.Runtime
 
             if (isGliding && verticalVelocity.y < glideGravity)
                 verticalVelocity.y = glideGravity;
+            UpdateWings();
         }
 
         public void SwitchSpline(SplineContainer newSpline)

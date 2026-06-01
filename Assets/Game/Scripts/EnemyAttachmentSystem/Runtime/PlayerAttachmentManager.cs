@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Character.Runtime;          // REQUIS : Pour le PlayerController et Respawn
+using Gameplay.UI;               // REQUIS : Pour le ScreenFader
 
 namespace EnemyAttachmentSystem.Runtime
 {
@@ -10,7 +13,6 @@ namespace EnemyAttachmentSystem.Runtime
         [SerializeField] private List<Transform> attachmentPoints;
         private List<Transform> availablePoints;
         public int currentAttachedCount { get; set; }
-        
         
         [Header("Speed")]
         public float baseSpeed = 5f;
@@ -52,9 +54,44 @@ namespace EnemyAttachmentSystem.Runtime
         
         private void Die()
         {
+            if (isDead) return; // Sécurité anti-boucle
+            
             isDead = true;
             currentSpeed = 0f;
             Debug.Log("GAME OVER : Trop d'ennemis accrochés !");
+
+            // On cherche le PlayerController sur ce GameObject (ou ses enfants/parents)
+            PlayerController player = GetComponentInParent<PlayerController>();
+            if (player == null) player = GetComponentInChildren<PlayerController>();
+
+            if (player != null)
+            {
+                // On lance la même routine de mort que la DeathZone vers le Checkpoint
+                StartCoroutine(AttachmentDeathRoutine(player));
+            }
+            else
+            {
+                Debug.LogError("PlayerAttachmentManager : Impossible de lancer la mort, PlayerController introuvable !");
+            }
+        }
+
+        private IEnumerator AttachmentDeathRoutine(PlayerController player)
+        {
+            // 1. On fige le joueur
+            player.isMovementLocked = true;
+            
+            
+            
+            // 3. IMPORTANT : On nettoie tous les ennemis accrochés pendant que l'écran est noir !
+            DestroyAllAttachedEnemies();
+            
+            // 4. Téléportation au dernier checkpoint sauvegardé
+            player.Respawn();
+
+            yield return new WaitForSeconds(0.2f);
+            
+
+            player.isMovementLocked = false;
         }
         
         public void DestroyAllAttachedEnemies()
@@ -72,7 +109,7 @@ namespace EnemyAttachmentSystem.Runtime
             availablePoints = new List<Transform>(attachmentPoints);
             
             currentAttachedCount = 0;
-            isDead = false;
+            isDead = false; // Permet de rejouer après la mort
             UpdateSpeed();
             
             Debug.Log("Tous les ennemis ont été détruits !");

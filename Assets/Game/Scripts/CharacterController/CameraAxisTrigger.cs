@@ -8,8 +8,15 @@ namespace Character.Runtime
         [Header("Camera Reference")]
         public DollyCameraController dollyCam;
 
+        [Header("Player Reference")]
+        public PlayerController player;
+
         [Header("New Offset on Enter")]
-        public Vector3 newOffset = new Vector3(-8f, 4f, 0f); // axe X par défaut
+        public Vector3 newOffset = new Vector3(-8f, 4f, 0f);
+
+        [Header("Player Rotation on Enter")]
+        public float newPlayerRotationY = 90f;
+        private float _previousRotationY;
 
         [Header("Reset on Exit ?")]
         public bool resetOnExit = false;
@@ -20,6 +27,12 @@ namespace Character.Runtime
 
             if (dollyCam != null)
                 dollyCam.SetNewOffset(newOffset);
+
+            if (player != null)
+            {
+                _previousRotationY = player.transform.eulerAngles.y;
+                player.transform.rotation = Quaternion.Euler(0f, newPlayerRotationY, 0f);
+            }
         }
 
         private void OnTriggerExit(Collider other)
@@ -28,6 +41,9 @@ namespace Character.Runtime
 
             if (resetOnExit && dollyCam != null)
                 dollyCam.ResetOffset();
+
+            if (resetOnExit && player != null)
+                player.transform.rotation = Quaternion.Euler(0f, _previousRotationY, 0f);
         }
     }
 }
