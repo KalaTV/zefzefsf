@@ -14,6 +14,6 @@ public class NewGame : MonoBehaviour
             Debug.Log("🗑 Sauvegarde supprimée.");
         }
 
-        SceneManager.LoadScene("LD_Blocking_Test");
+        SceneManager.LoadScene("Intro");
     }
 }

@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Game/Scenes/SandBox/Start_Menu.unity
     guid: 3e6efe4fb74ce0a44ac997eae9a41004
   - enabled: 1
+    path: Assets/Game/Scenes/SandBox/Intro.unity
+    guid: 151bf22945f5c6d468f2ce6698e79440
+  - enabled: 1
     path: Assets/Game/Scenes/SandBox/LD_Blocking_Test.unity
     guid: 1249b3f5361ddff41bdedbec5dcad9d8
   m_configObjects:

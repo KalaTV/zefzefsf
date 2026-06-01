@@ -23,7 +23,7 @@ public class LevelManager : MonoBehaviour
     public void NewGame()
     {
         saveSystem.DeleteSave();
-        UnityEngine.SceneManagement.SceneManager.LoadScene("NomDeTaScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Intro");
     }
     private void Awake()
     {
