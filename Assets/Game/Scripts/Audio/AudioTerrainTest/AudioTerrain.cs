@@ -10,7 +10,8 @@ public class TerrainAmbientAudio : MonoBehaviour
     [Serializable]
     public class AmbientSound
     {
-        public AudioClip clip;
+        [Tooltip("AudioSource utilisée comme modèle")]
+        public AudioSource source;
 
         [Range(0f, 1f)]
         [Tooltip("Volume du son")]
@@ -30,10 +31,22 @@ public class TerrainAmbientAudio : MonoBehaviour
         [Tooltip("0 = durée réelle du clip")]
         [Min(0f)]
         public float duration = 0f;
+        
+        [Tooltip("Temps entre deux lectures de ce son")]
+        public float interval = 5f;
+
+        [NonSerialized]
+        public float nextPlayTime;
+        
+        [Tooltip("Si activé, le son continue même si le joueur change de terrain")]
+        public bool playUntilEndOnTerrainChange = true;
     }
     
     private Transform player;
     private Collider terrainCollider;
+    
+    private readonly List<AudioSource> protectedSources = new();
+    private readonly Dictionary<AudioSource, AmbientSound> sourceToSound = new();
 
     [Serializable]
     public class SoundCategory
@@ -70,6 +83,27 @@ public class TerrainAmbientAudio : MonoBehaviour
 
     private bool playerInside;
     private float nextPlayTime;
+    
+    private void CopyAudioSource(AudioSource original, AudioSource target)
+    {
+        target.clip = original.clip;
+        target.outputAudioMixerGroup = original.outputAudioMixerGroup;
+        target.mute = original.mute;
+        target.bypassEffects = original.bypassEffects;
+        target.bypassListenerEffects = original.bypassListenerEffects;
+        target.bypassReverbZones = original.bypassReverbZones;
+        target.priority = original.priority;
+        target.pitch = original.pitch;
+        target.panStereo = original.panStereo;
+        target.spatialBlend = original.spatialBlend;
+        target.reverbZoneMix = original.reverbZoneMix;
+        target.loop = original.loop;
+        target.dopplerLevel = original.dopplerLevel;
+        target.spread = original.spread;
+        target.rolloffMode = original.rolloffMode;
+        target.minDistance = original.minDistance;
+        target.maxDistance = original.maxDistance;
+    }
 
     private void Awake()
     {
@@ -115,19 +149,81 @@ public class TerrainAmbientAudio : MonoBehaviour
         if (currentTerrain != this)
             return;
 
-        if (Time.time < nextPlayTime)
-            return;
-
         CleanupDestroyedSources();
 
-        if (activeSources.Count < maxSimultaneousSounds)
+        foreach (SoundCategory category in categories)
         {
-            PlayRandomSound();
-        }
+            if (category == null)
+                continue;
 
-        nextPlayTime = Time.time + soundInterval;
+            foreach (AmbientSound sound in category.sounds)
+            {
+                if (sound == null)
+                    continue;
+
+                if (Time.time < sound.nextPlayTime)
+                    continue;
+
+                TryPlaySound(sound);
+
+                sound.nextPlayTime =
+                    Time.time + sound.interval;
+            }
+        }
     }
     
+    private void TryPlaySound(AmbientSound sound)
+    {
+        if (sound.source == null)
+            return;
+
+        if (sound.source.clip == null)
+            return;
+
+        if (UnityEngine.Random.value > sound.randomWeight)
+            return;
+
+        int existingCount = 0;
+
+        foreach (AudioSource activeSource in activeSources)
+        {
+            if (activeSource == null)
+                continue;
+
+            if (activeSource.clip == sound.source.clip)
+                existingCount++;
+        }
+
+        if (!sound.allowSimultaneous && existingCount > 0)
+            return;
+
+        if (existingCount >= sound.maxInstances)
+            return;
+
+        GameObject soundObject =
+            new GameObject($"Ambient_{sound.source.name}");
+
+        soundObject.transform.SetParent(transform);
+        soundObject.transform.localPosition = Vector3.zero;
+
+        AudioSource newSource =
+            soundObject.AddComponent<AudioSource>();
+
+        CopyAudioSource(sound.source, newSource);
+
+        newSource.volume = 0f;
+
+        activeSources.Add(newSource);
+
+        StartCoroutine(
+            PlaySoundRoutine(
+                newSource,
+                sound.volume,
+                sound
+            )
+        );
+    }
+
     private bool IsPlayerInsideTerrainXZ()
     {
         if (player == null)
@@ -151,6 +247,12 @@ public class TerrainAmbientAudio : MonoBehaviour
         if (sound == null)
             return;
 
+        if (sound.source == null)
+            return;
+
+        if (sound.source.clip == null)
+            return;
+
         int existingCount = 0;
 
         foreach (AudioSource activeSource in activeSources)
@@ -158,7 +260,7 @@ public class TerrainAmbientAudio : MonoBehaviour
             if (activeSource == null)
                 continue;
 
-            if (activeSource.clip == sound.clip)
+            if (activeSource.clip == sound.source.clip)
                 existingCount++;
         }
 
@@ -169,18 +271,25 @@ public class TerrainAmbientAudio : MonoBehaviour
             return;
 
         GameObject soundObject =
-            new GameObject($"Ambient_{sound.clip.name}");
+            new GameObject($"Ambient_{sound.source.name}");
 
         soundObject.transform.SetParent(transform);
 
         AudioSource newSource =
             soundObject.AddComponent<AudioSource>();
 
-        newSource.clip = sound.clip;
-        newSource.loop = false;
+        CopyAudioSource(sound.source, newSource);
+        
+        sourceToSound[newSource] = sound;
+        
+        if (sound.playUntilEndOnTerrainChange)
+        {
+            protectedSources.Add(newSource);
+        }
+
+        newSource.volume = 0f;
         newSource.playOnAwake = false;
         newSource.spatialBlend = 0f;
-        newSource.volume = 0f;
 
         activeSources.Add(newSource);
 
@@ -224,7 +333,10 @@ public class TerrainAmbientAudio : MonoBehaviour
 
         source.volume = targetVolume;
 
-        float clipDuration = source.clip.length;
+        float clipDuration =
+            source.clip != null
+                ? source.clip.length
+                : 0f;
 
         float totalDuration =
             sound.duration > 0f
@@ -260,10 +372,13 @@ public class TerrainAmbientAudio : MonoBehaviour
 
             yield return null;
         }
+        
+        protectedSources.Remove(source);
 
         activeSources.Remove(source);
 
         source.Stop();
+        sourceToSound.Remove(source);
 
         Destroy(source.gameObject);
     }
@@ -285,7 +400,10 @@ public class TerrainAmbientAudio : MonoBehaviour
                 if (sound == null)
                     continue;
 
-                if (sound.clip == null)
+                if (sound.source == null)
+                    continue;
+
+                if (sound.source.clip == null)
                     continue;
 
                 if (sound.randomWeight <= 0f)
@@ -326,17 +444,20 @@ public class TerrainAmbientAudio : MonoBehaviour
 
     private void FadeOutAllSounds()
     {
-        List<AudioSource> sourcesCopy =
-            new List<AudioSource>(activeSources);
+        List<AudioSource> sourcesCopy = new List<AudioSource>(activeSources);
 
         foreach (AudioSource activeSource in sourcesCopy)
         {
             if (activeSource == null)
                 continue;
 
-            StartCoroutine(
-                FadeOutSource(activeSource)
-            );
+            if (sourceToSound.TryGetValue(activeSource, out AmbientSound sound))
+            {
+                if (sound != null && sound.playUntilEndOnTerrainChange)
+                    continue; // ❗ NE PAS FADE OUT
+            }
+
+            StartCoroutine(FadeOutSource(activeSource));
         }
     }
 
@@ -378,9 +499,8 @@ public class TerrainAmbientAudio : MonoBehaviour
 
     private void CleanupDestroyedSources()
     {
-        activeSources.RemoveAll(
-            source => source == null
-        );
+        activeSources.RemoveAll(source => source == null);
+        protectedSources.RemoveAll(s => s == null);
     }
 
     private void ActivateTerrain()
@@ -391,10 +511,12 @@ public class TerrainAmbientAudio : MonoBehaviour
         if (currentTerrain != null)
         {
             currentTerrain.FadeOutAllSounds();
+
+            // ❗ nettoyage des sons protégés du terrain précédent
+            currentTerrain.sourceToSound.Clear();
         }
 
         currentTerrain = this;
-
         nextPlayTime = Time.time;
     }
 

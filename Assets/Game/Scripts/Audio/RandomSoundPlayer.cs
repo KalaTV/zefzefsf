@@ -15,7 +15,8 @@ public class RandomZoneAudioPlayer : MonoBehaviour
     [Serializable]
     public class Sound
     {
-        public AudioClip clip;
+        [Tooltip("AudioSource utilisé comme template")]
+        public AudioSource source;
 
         [Range(0f, 1f)]
         public float randomWeight = 1f;
@@ -23,7 +24,7 @@ public class RandomZoneAudioPlayer : MonoBehaviour
         [Range(0f, 1f)]
         public float volume = 1f;
 
-        [Tooltip("Durée du son (utilisée pour cutoff + fade out)")]
+        [Tooltip("Durée du son (0 = durée du clip)")]
         public float duration = 5f;
 
         public float fadeInDuration = 1f;
@@ -105,7 +106,7 @@ public class RandomZoneAudioPlayer : MonoBehaviour
 
     private void PlaySound(Sound sound)
     {
-        if (sound == null || sound.clip == null)
+        if (sound == null || sound.source == null || sound.source.clip == null)
             return;
 
         if (currentCoroutine != null)
@@ -119,8 +120,13 @@ public class RandomZoneAudioPlayer : MonoBehaviour
         isTransitioning = true;
 
         audioSource.Stop();
-        audioSource.clip = sound.clip;
+
+        CopyAudioSource(sound.source, audioSource);
+
         audioSource.volume = 0f;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 0f;
+
         audioSource.Play();
 
         float t = 0f;
@@ -128,13 +134,34 @@ public class RandomZoneAudioPlayer : MonoBehaviour
         while (t < sound.fadeInDuration)
         {
             t += Time.deltaTime;
-            audioSource.volume = Mathf.Lerp(0f, sound.volume, t / sound.fadeInDuration);
+
+            audioSource.volume = Mathf.Lerp(
+                0f,
+                sound.volume,
+                t / sound.fadeInDuration
+            );
+
             yield return null;
         }
 
         audioSource.volume = sound.volume;
 
-        float playTime = Mathf.Max(0f, sound.duration - sound.fadeOutDuration);
+        float clipDuration =
+            audioSource.clip != null
+                ? audioSource.clip.length
+                : 0f;
+
+        float totalDuration =
+            sound.duration > 0f
+                ? sound.duration
+                : clipDuration;
+
+        float playTime =
+            Mathf.Max(
+                0f,
+                totalDuration - sound.fadeOutDuration
+            );
+
         yield return new WaitForSeconds(playTime);
 
         t = 0f;
@@ -143,12 +170,42 @@ public class RandomZoneAudioPlayer : MonoBehaviour
         while (t < sound.fadeOutDuration)
         {
             t += Time.deltaTime;
-            audioSource.volume = Mathf.Lerp(start, 0f, t / sound.fadeOutDuration);
+
+            audioSource.volume = Mathf.Lerp(
+                start,
+                0f,
+                t / sound.fadeOutDuration
+            );
+
             yield return null;
         }
 
         audioSource.Stop();
         isTransitioning = false;
+    }
+
+    private void CopyAudioSource(AudioSource original, AudioSource target)
+    {
+        target.clip = original.clip;
+        target.outputAudioMixerGroup = original.outputAudioMixerGroup;
+        target.mute = original.mute;
+        target.bypassEffects = original.bypassEffects;
+        target.bypassListenerEffects = original.bypassListenerEffects;
+        target.bypassReverbZones = original.bypassReverbZones;
+        target.priority = original.priority;
+        target.pitch = original.pitch;
+        target.panStereo = original.panStereo;
+        target.spatialBlend = 0f;
+        target.reverbZoneMix = original.reverbZoneMix;
+        target.loop = original.loop;
+        target.dopplerLevel = original.dopplerLevel;
+        target.spread = original.spread;
+        target.rolloffMode = original.rolloffMode;
+        target.minDistance = original.minDistance;
+        target.maxDistance = original.maxDistance;
+        target.ignoreListenerPause = original.ignoreListenerPause;
+        target.ignoreListenerVolume = original.ignoreListenerVolume;
+        target.velocityUpdateMode = original.velocityUpdateMode;
     }
 
     private Sound GetRandomWeightedSound()
@@ -161,7 +218,10 @@ public class RandomZoneAudioPlayer : MonoBehaviour
 
             foreach (var s in cat.sounds)
             {
-                if (s?.clip == null || s.randomWeight <= 0f)
+                if (s?.source == null || s.source.clip == null)
+                    continue;
+
+                if (s.randomWeight <= 0f)
                     continue;
 
                 pool.Add(s);
@@ -222,4 +282,3 @@ public class RandomZoneAudioPlayer : MonoBehaviour
         Gizmos.DrawWireCube(Vector3.zero, zoneSize);
     }
 }
-
