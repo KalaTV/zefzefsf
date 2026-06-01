@@ -9,7 +9,6 @@ public class SaveSystem : MonoBehaviour
     {
         saveFilePath = Application.persistentDataPath + "/MaSauvegarde.json";
     }
-    
     public void SaveGame(GameData dataToSave)
     {
         string json = JsonUtility.ToJson(dataToSave, true);
@@ -18,7 +17,14 @@ public class SaveSystem : MonoBehaviour
         
         Debug.Log("Jeu sauvegardé avec succès dans : " + saveFilePath);
     }
-    
+    public void DeleteSave()
+    {
+
+        // Si tu utilises un fichier JSON/binaire
+        string path = Application.persistentDataPath + "/save.dat"; // adapte le nom
+        if (System.IO.File.Exists(path))
+            System.IO.File.Delete(path);
+    }
     public GameData LoadGame()
     {
         if (File.Exists(saveFilePath))
